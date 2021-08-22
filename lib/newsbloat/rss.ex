@@ -198,7 +198,7 @@ defmodule Newsbloat.RSS do
                        title: Newsbloat.RSS.get_value_from_map_list_by_key(value, :title),
                        link: Newsbloat.RSS.get_attr_value_from_map_list_by_key(value, :link, :href),
                        description: Newsbloat.RSS.get_value_from_map_list_by_key(value, :summary),
-                       content: content || "moi",
+                       content: content,
                        feed_id: feed.id,
                      })
                      |>  Ecto.Changeset.put_change(:feed_id, feed.id)

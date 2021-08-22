@@ -39,6 +39,10 @@ defmodule NewsbloatWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
+
+      def render_component(template, assigns \\ []) do
+        render(NewsbloatWeb.ComponentView, template, assigns)
+      end
     end
   end
 

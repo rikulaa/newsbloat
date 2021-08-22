@@ -11,6 +11,13 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
 
   defp list_feeds do
     RSS.list_feeds()
+    |> Enum.map(fn (feed) ->
+      %{
+        :feed => feed,
+        :unread_count => RSS.get_feed_items_unread_count!(feed)
+      }
+      
+    end)
   end
 
 
@@ -20,9 +27,9 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
     <h3>Feeds</h3>
 
     <ul>
-      <%= for feed <- @feeds do %>
+      <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
         <li>
-          <span><%= live_redirect feed.title, to: Routes.feed_show_path(@socket, :show, feed) %></span>
+        <span><%= live_redirect feed.title, to: Routes.feed_show_path(@socket, :show, feed) %> <%= if unread_count != 0 do "("<>to_string(unread_count)<>")" end %></span>
         </li>
 
 

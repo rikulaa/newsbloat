@@ -31,6 +31,9 @@
       </h3>
 
       <%= if item.id == @item_id do %>
+        <p>
+        [<%= render_component "external_link.html", text: "Link", href: item.link %>]
+        </p>
         <div>
           <p><%= item.description %></p>
           <p><%= raw(item.content) %></p>

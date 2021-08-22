@@ -233,4 +233,12 @@ defmodule Newsbloat.RSS do
     Newsbloat.RSS.update_item(item, %{ "is_read": true })
   end
 
+  def get_feed_items_unread_count!(feed) do
+    [count] = Repo.all(
+      from i in Item, where: [feed_id: ^feed.id, is_read: false], select: count(i.id)
+    )
+    count
+  end
+
+
 end

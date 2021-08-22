@@ -57,6 +57,8 @@
 
 /* Alerts and form errors */
 .alert {
+  position: fixed;
+  right: 1rem;
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;

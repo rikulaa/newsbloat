@@ -116,6 +116,11 @@ defmodule Newsbloat.RSS do
     value
     |> List.first()
   end
+  def get_attr_value_from_map_list_by_key(map_list, key, attr) do
+    %{ attr: attr_list } = map_list
+                        |> Enum.find(%{ attr: []}, fn i -> i.name === key end)
+    attr_list[attr]
+  end
 
   def get_feed_items(%Feed{} = feed) do
     query = from item in Item, where: item.feed_id == ^feed.id, order_by: [desc: item.id]
@@ -176,8 +181,8 @@ defmodule Newsbloat.RSS do
                        published_at: now, 
                        guid: Newsbloat.RSS.get_value_from_map_list_by_key(value, :id),
                        title: Newsbloat.RSS.get_value_from_map_list_by_key(value, :title),
-                       link: Newsbloat.RSS.get_value_from_map_list_by_key(value, :link),
-                       description: Newsbloat.RSS.get_value_from_map_list_by_key(value, :summary),
+                       link: Newsbloat.RSS.get_attr_value_from_map_list_by_key(value, :link, :href),
+                       description: Newsbloat.RSS.get_value_from_map_list_by_key(value, :summary) || "No description",
                        content: content || "moi",
                        feed_id: feed.id,
                      })

@@ -11,6 +11,7 @@ defmodule Newsbloat.RSS.Item do
     field :link, :string
     field :published_at, :utc_datetime
     field :title, :string
+    field :is_read, :boolean
     belongs_to :feed, Feed
 
     timestamps()
@@ -19,7 +20,7 @@ defmodule Newsbloat.RSS.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:title, :link, :description, :guid, :published_at, :content])
+    |> cast(attrs, [:title, :link, :description, :guid, :published_at, :content, :is_read])
     |> validate_required([:title, :link, :guid, :published_at])
     |> unique_constraint(:guid)
   end

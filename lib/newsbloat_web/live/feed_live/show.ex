@@ -17,6 +17,13 @@ defmodule NewsbloatWeb.FeedLive.Show do
     item_id = params
               |> Map.get("item_id")
               |> (fn (id) -> if id do String.to_integer(id) else nil end end).()
+
+    if item_id do
+      item = RSS.get_feed_item(feed, item_id)
+      RSS.mark_item_as_read(item)
+    end
+
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
@@ -36,6 +43,12 @@ defmodule NewsbloatWeb.FeedLive.Show do
     {:ok, _ } = Newsbloat.RSS.fetch_feed_items(socket.assigns.feed)
     {:noreply, push_redirect(socket, to: Routes.feed_show_path(socket, :show, socket.assigns.feed))}
   end
+
+  def handle_event("mark_all_as_read", _, socket) do
+    {:ok, _ } = Newsbloat.RSS.mark_all_feed_items_as_read(socket.assigns.feed)
+    {:noreply, push_redirect(socket, to: Routes.feed_show_path(socket, :show, socket.assigns.feed))}
+  end
+
 
 
   defp page_title(:show), do: "Show Feed"

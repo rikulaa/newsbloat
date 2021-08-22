@@ -109,6 +109,17 @@ defmodule Newsbloat.RSS do
     Feed.changeset(feed, attrs)
   end
 
+  def mark_all_feed_items_as_read(%Feed{} = feed) do
+    query = from item in Item,
+      where: item.feed_id == ^feed.id, 
+      update: [set: [is_read: true]]
+
+    {updates, _ } = query
+    |> Repo.update_all([])
+
+    {:ok, feed}
+  end
+
 
   def get_value_from_map_list_by_key(map_list, key) do
     %{ value: value } = map_list
@@ -122,6 +133,10 @@ defmodule Newsbloat.RSS do
     attr_list[attr]
   end
 
+  def get_feed_item(%Feed{} = feed, item_id) do
+    query = from item in Item, where: item.feed_id == ^feed.id and item.id == ^item_id, order_by: [desc: item.id]
+    Repo.one(query)
+  end
   def get_feed_items(%Feed{} = feed) do
     query = from item in Item, where: item.feed_id == ^feed.id, order_by: [desc: item.id]
     Repo.all(query)
@@ -205,6 +220,17 @@ defmodule Newsbloat.RSS do
       end
     )
     |> Repo.transaction()
+  end
+
+
+  def update_item(%Item{} = item, attrs) do
+    item 
+    |> Item.changeset(attrs)
+    |> Repo.update
+  end
+
+  def mark_item_as_read(%Item{} = item) do
+    Newsbloat.RSS.update_item(item, %{ "is_read": true })
   end
 
 end

@@ -48,6 +48,10 @@ defmodule NewsbloatWeb do
         layout: {NewsbloatWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
+
+      def render_component(template, assigns \\ []) do
+        render(NewsbloatWeb.ComponentView, template, assigns)
+      end
     end
   end
 
@@ -56,6 +60,10 @@ defmodule NewsbloatWeb do
       use Phoenix.LiveComponent
 
       unquote(view_helpers())
+
+      def render_component(template, assigns \\ []) do
+        render(NewsbloatWeb.ComponentView, template, assigns)
+      end
     end
   end
 

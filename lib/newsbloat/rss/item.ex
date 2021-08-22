@@ -20,7 +20,7 @@ defmodule Newsbloat.RSS.Item do
   def changeset(item, attrs) do
     item
     |> cast(attrs, [:title, :link, :description, :guid, :published_at, :content])
-    |> validate_required([:title, :link, :description, :guid, :published_at, :content])
+    |> validate_required([:title, :link, :guid, :published_at])
     |> unique_constraint(:guid)
   end
 end

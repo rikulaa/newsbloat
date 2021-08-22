@@ -1,0 +1,51 @@
+<h1> <%= @feed.title %></h1>
+<button phx-click="refresh_feed">Refresh</button>
+
+<%= if @live_action in [:edit, :new] do %>
+  <%= live_modal @socket, NewsbloatWeb.FeedLive.FormComponent,
+    id: @feed.id,
+    title: @page_title,
+    action: @live_action,
+    feed: @feed,
+    return_to: Routes.feed_show_path(@socket, :show, @feed) %>
+<% end %>
+
+<%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
+<section>
+  <ul>
+
+    <li>
+      <strong>Title:</strong>
+      <%= @feed.title %>
+    </li>
+
+    <li>
+      <strong>Url:</strong>
+      <%= @feed.url %>
+    </li>
+
+    <li>
+      <strong>Description:</strong>
+      <%= @feed.description %>
+    </li>
+
+  </ul>
+
+  <span><%= live_patch "Edit", to: Routes.feed_show_path(@socket, :edit, @feed), class: "button" %></span>
+  <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index) %></span>
+</section>
+
+<section>
+  <%= for item <- @items do %>
+    <details>
+      <summary>
+        <%= item.title %>
+      </summary>
+      <p><%= item.description %></p>
+      <p><%= raw(item.content) %></p>
+
+    </details>
+    
+  <% end %>
+  
+</section>

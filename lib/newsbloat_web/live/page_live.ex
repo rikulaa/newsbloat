@@ -1,9 +1,12 @@
 defmodule NewsbloatWeb.PageLive do
   use NewsbloatWeb, :live_view
 
+  alias Newsbloat.RSS
+  alias Newsbloat.RSS.Feed
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok, assign(socket, feeds: list_feeds(), query: "", results: %{})}
   end
 
   @impl true
@@ -35,5 +38,9 @@ defmodule NewsbloatWeb.PageLive do
         String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
         into: %{},
         do: {app, vsn}
+  end
+
+  defp list_feeds do
+    RSS.list_feeds()
   end
 end

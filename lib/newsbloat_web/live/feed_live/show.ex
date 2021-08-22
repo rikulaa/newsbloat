@@ -12,13 +12,17 @@ defmodule NewsbloatWeb.FeedLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"id" => id} = params, _, socket) do
     feed = RSS.get_feed!(id)
+    item_id = params
+              |> Map.get("item_id")
+              |> (fn (id) -> if id do String.to_integer(id) else nil end end).()
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:feed, feed)
      |> assign(:items, RSS.get_feed_items(feed))
+     |> assign(:item_id, item_id)
     }
   end
 

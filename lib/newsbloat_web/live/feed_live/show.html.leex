@@ -15,14 +15,23 @@
 <%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
 <section>
   <%= for item <- @items do %>
-    <details>
-      <summary>
-        <%= item.title %>
-      </summary>
-      <p><%= item.description %></p>
-      <p><%= raw(item.content) %></p>
+    <div>
+      <h3>
+        <%= if item.id == @item_id do %>
+          <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
+        <% else %>
+          <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed, item.id) %>
+        <% end %>
+      </h3>
 
-    </details>
+      <%= if item.id == @item_id do %>
+      <div>
+        <p><%= item.description %></p>
+        <p><%= raw(item.content) %></p>
+      </div>
+      <% end %>
+
+    </div>
     
   <% end %>
   

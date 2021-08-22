@@ -1,6 +1,8 @@
 defmodule NewsbloatWeb.Router do
   use NewsbloatWeb, :router
 
+  alias NewsbloatWeb.Plugs.ReturnToQueryParamToAssigns
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule NewsbloatWeb.Router do
     plug :put_root_layout, {NewsbloatWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ReturnToQueryParamToAssigns
   end
 
   pipeline :api do

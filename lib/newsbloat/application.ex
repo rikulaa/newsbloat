@@ -14,9 +14,10 @@ defmodule Newsbloat.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Newsbloat.PubSub},
       # Start the Endpoint (http/https)
-      NewsbloatWeb.Endpoint
+      NewsbloatWeb.Endpoint,
       # Start a worker by calling: Newsbloat.Worker.start_link(arg)
       # {Newsbloat.Worker, arg}
+      {Newsbloat.Jobs.FetchNewFeedItems, name: NewsbloatWeb.Jobs.FetchNewFeedItems}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

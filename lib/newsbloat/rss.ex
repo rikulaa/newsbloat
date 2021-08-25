@@ -240,5 +240,19 @@ defmodule Newsbloat.RSS do
     count
   end
 
+  def fetch_feed_items_for_all_feeds() do
+    query = from feed in Feed
+    max_rows = 10
+
+    Repo.transaction(fn() ->
+      query
+      |> Repo.stream([{ :max_rows, max_rows }])
+      |> Stream.chunk_every(max_rows)
+      |> Enum.each(fn batch ->
+        batch |> Enum.each(fn feed -> Newsbloat.RSS.fetch_feed_items(feed) end)
+      end)
+    end)
+  end
+
 
 end

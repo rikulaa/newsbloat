@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.RSS.FetchNewFeedItems do
+defmodule Mix.Tasks.Rss.FetchNewFeedItems do
   use Mix.Task
 
   alias Newsbloat.RSS

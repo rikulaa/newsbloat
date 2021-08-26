@@ -26,3 +26,4 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - [ ] Tag/Category -system
 - [ ] User authentication
 - [ ] Deployment
+- [ ] Item: ERROR 22001 (string_data_right_truncation) value too long for type character varying(255)

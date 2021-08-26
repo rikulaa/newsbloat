@@ -152,6 +152,7 @@ defmodule Newsbloat.RSS do
 
     rss_items = parsed_body
     |> Quinn.find(:item)
+    |> Enum.reverse()
     |> Enum.map(
       fn (item) -> 
         %{ value: value } = item
@@ -179,6 +180,7 @@ defmodule Newsbloat.RSS do
 
     atom_items = parsed_body
                  |> Quinn.find(:entry)
+                 |> Enum.reverse()
                  |> Enum.map(
                    fn (item) -> 
                      %{ value: value } = item

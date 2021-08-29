@@ -152,6 +152,7 @@ defmodule Newsbloat.RSS do
     parsed_body = body
     |> Quinn.parse()
 
+    # TODO: More robust checks and parsing for atom/rss items
     rss_items = parsed_body
     |> Quinn.find(:item)
     |> Enum.reverse()

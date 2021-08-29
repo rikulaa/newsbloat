@@ -1,5 +1,3 @@
-<h1> <%= @feed.title %></h1>
-
 <%= if @live_action in [:edit, :new] do %>
   <%= live_modal @socket, NewsbloatWeb.FeedLive.FormComponent,
     id: @feed.id,
@@ -9,8 +7,10 @@
     return_to: Routes.feed_show_path(@socket, :show, @feed) %>
 <% end %>
 
-<%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
-<section>
+<%= live_component NewsbloatWeb.FeedLive.FeedListComponent, current_feed: @feed %>
+<section class="container mx-auto">
+  <h2> <%= @feed.title %> <%= @id %></h2>
+
   <button phx-click="refresh_feed">Refresh</button>
   <span><%= live_patch "Edit", to: Routes.feed_show_path(@socket, :edit, @feed), class: "button" %></span>
   <button phx-click="mark_all_as_read">Mark all as read</button>
@@ -18,7 +18,7 @@
 
   <%= for item <- @items do %>
     <div>
-      <h3 id="<%= item.id %>">
+      <h3 id="<%= item.id %>" class="mb-2">
         <%= if item.id == @item_id do %>
           <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
         <% else %>

@@ -5,6 +5,59 @@
 /* This file is for your main application css. */
 /* @import "./phoenix.css"; */
 
+@layer base {
+  body {
+    @apply text-base;
+  }
+  h1 {
+    @apply text-5xl mt-10 mb-12;
+  }
+  h2 {
+    @apply text-4xl mt-8 mb-10;
+  }
+  h3 {
+    @apply text-2xl mt-6 mb-8;
+  }
+  h4 {
+    @apply text-xl mt-4 mb-6;
+  }
+  h5 {
+    @apply text-lg mt-2 mb-4;
+  }
+  h5 {
+    @apply text-base mt-1 mb-4;
+  }
+  p {
+    @apply mb-4;
+  }
+  a {
+    @apply text-blue-500;
+  }
+
+  a, button {
+    @apply inline-block p-2 rounded;
+  }
+
+}
+
+.container {
+  max-width: 60rem;
+  @apply px-4 !important;
+  @screen md {
+    @apply px-8 !important;
+  }
+}
+
+button, .button {
+  @apply text-black border border-black leading-normal bg-transparent m-0 cursor-pointer;
+}
+
+.active {
+  @apply bg-gray-100 text-gray-900;
+}
+/* lists */
+
+
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {

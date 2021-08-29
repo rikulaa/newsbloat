@@ -2,11 +2,14 @@ defmodule Newsbloat.RSS.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Newsbloat.RSS.Feed
+  alias Newsbloat.RSS.Item
+  alias HtmlSanitizeEx
 
   schema "items" do
     field :content, :string
+    field :safe_content, :string, virtual: true
     field :description, :string
+    field :safe_description, :string, virtual: true
     field :guid, :string
     field :link, :string
     field :published_at, :utc_datetime
@@ -15,6 +18,13 @@ defmodule Newsbloat.RSS.Item do
     belongs_to :feed, Feed
 
     timestamps()
+  end
+
+  # TODO: maybe cache these ?
+  @spec with_safe_content_and_desc(%Item{}) :: %Item{}
+  def with_safe_content_and_desc(%Item{ content: content, description: description } = item) do
+    %{ item | safe_content: HtmlSanitizeEx.basic_html(content), safe_description: HtmlSanitizeEx.basic_html(description) }
+  
   end
 
   @doc false

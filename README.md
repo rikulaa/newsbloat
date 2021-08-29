@@ -21,7 +21,6 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## TODO
 
-- [ ] Safely render content?
 - [ ] Styling
 - [ ] Tag/Category -system
 - [ ] User authentication

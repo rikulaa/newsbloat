@@ -35,8 +35,8 @@
         [<%= render_component "external_link.html", text: "Link", href: item.link %>]
         </p>
         <div>
-          <p><%= raw(item.description) %></p>
-          <p><%= raw(item.content) %></p>
+          <p><%= item.description |> raw %></p>
+          <p><%= item.safe_content |> raw %></p>
         </div>
       <% end %>
 

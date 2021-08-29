@@ -56,7 +56,7 @@ defmodule Newsbloat.RSS do
     |> Feed.changeset(attrs)
     |> Repo.insert()
 
-    {:ok, items } = Newsbloat.RSS.fetch_feed_items(feed)
+    {:ok, items } = fetch_feed_items(feed)
     IO.puts("SHOULD HAVE FETCHTED")
     IO.puts(Enum.count(items))
     {:ok, feed}
@@ -160,7 +160,7 @@ defmodule Newsbloat.RSS do
       fn (item) -> 
         %{ value: value } = item
 
-        content = Newsbloat.RSS.get_value_from_map_list_by_key(value, :"content:encoded") || Newsbloat.RSS.get_value_from_map_list_by_key(value, :content)
+        content = get_value_from_map_list_by_key(value, :"content:encoded") || get_value_from_map_list_by_key(value, :content)
 
         # TODO: fix the date parsing
         now = DateTime.now("Etc/UTC")
@@ -169,12 +169,12 @@ defmodule Newsbloat.RSS do
 
         %Item{} 
         |> Item.changeset(%{
-            # published_at: Timex.parse!(Newsbloat.RSS.get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
+            # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
           published_at: now, 
-          guid: Newsbloat.RSS.get_value_from_map_list_by_key(value, :guid),
-          title: Newsbloat.RSS.get_value_from_map_list_by_key(value, :title),
-          link: Newsbloat.RSS.get_value_from_map_list_by_key(value, :link),
-          description: Newsbloat.RSS.get_value_from_map_list_by_key(value, :description),
+          guid: get_value_from_map_list_by_key(value, :guid),
+          title: get_value_from_map_list_by_key(value, :title),
+          link: get_value_from_map_list_by_key(value, :link),
+          description: get_value_from_map_list_by_key(value, :description),
           content: content,
           feed_id: feed.id,
         })
@@ -188,7 +188,7 @@ defmodule Newsbloat.RSS do
                    fn (item) -> 
                      %{ value: value } = item
 
-                     content = Newsbloat.RSS.get_value_from_map_list_by_key(value, :content) || Newsbloat.RSS.get_value_from_map_list_by_key(value, :summary)
+                     content = get_value_from_map_list_by_key(value, :content) || get_value_from_map_list_by_key(value, :summary)
 
                     # TODO: fix the date parsing
                      now = DateTime.now("Etc/UTC")
@@ -197,12 +197,12 @@ defmodule Newsbloat.RSS do
 
                      %Item{} 
                      |> Item.changeset(%{
-                      # published_at: Timex.parse!(Newsbloat.RSS.get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
+                      # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
                        published_at: now, 
-                       guid: Newsbloat.RSS.get_value_from_map_list_by_key(value, :id),
-                       title: Newsbloat.RSS.get_value_from_map_list_by_key(value, :title),
-                       link: Newsbloat.RSS.get_attr_value_from_map_list_by_key(value, :link, :href),
-                       description: Newsbloat.RSS.get_value_from_map_list_by_key(value, :summary),
+                       guid: get_value_from_map_list_by_key(value, :id),
+                       title: get_value_from_map_list_by_key(value, :title),
+                       link: get_attr_value_from_map_list_by_key(value, :link, :href),
+                       description: get_value_from_map_list_by_key(value, :summary),
                        content: content,
                        feed_id: feed.id,
                      })
@@ -235,7 +235,7 @@ defmodule Newsbloat.RSS do
   end
 
   def mark_item_as_read(%Item{} = item) do
-    Newsbloat.RSS.update_item(item, %{ "is_read": true })
+    update_item(item, %{ "is_read": true })
   end
 
   def get_feed_items_unread_count!(feed) do
@@ -255,7 +255,7 @@ defmodule Newsbloat.RSS do
       |> Repo.stream([{ :max_rows, max_rows }])
       |> Stream.chunk_every(max_rows)
       |> Enum.each(fn batch ->
-        batch |> Enum.each(fn feed -> Newsbloat.RSS.fetch_feed_items(feed) end)
+        batch |> Enum.each(fn feed -> fetch_feed_items(feed) end)
       end)
     end, timeout: 1000 * 60) # 1 minute
   end

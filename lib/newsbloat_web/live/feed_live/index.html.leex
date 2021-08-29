@@ -1,5 +1,3 @@
-<h1>Listing Feeds</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, NewsbloatWeb.FeedLive.FormComponent,
     id: @feed.id || :new,
@@ -13,31 +11,33 @@
 <%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
 
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Url</th>
-      <th>Description</th>
+<section class="container mx-auto">
+    <h1>Listing Feeds</h1>
+    <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Url</th>
+        <th>Description</th>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="feeds">
-    <%= for feed <- @feeds do %>
-      <tr id="feed-<%= feed.id %>">
-        <td><%= feed.title %></td>
-        <td><%= feed.url %></td>
-        <td><%= feed.description %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.feed_show_path(@socket, :show, feed) %></span>
-          <span><%= live_patch "Edit", to: Routes.feed_index_path(@socket, :edit, feed) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: feed.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody id="feeds">
+      <%= for feed <- @feeds do %>
+        <tr id="feed-<%= feed.id %>">
+          <td><%= feed.title %></td>
+          <td><%= feed.url %></td>
+          <td><%= feed.description %></td>
+
+          <td>
+            <span><%= live_redirect "Show", to: Routes.feed_show_path(@socket, :show, feed) %></span>
+            <span><%= live_patch "Edit", to: Routes.feed_index_path(@socket, :edit, feed) %></span>
+            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: feed.id, data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table></section>
 
 <span><%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new) %></span>

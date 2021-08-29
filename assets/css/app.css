@@ -38,6 +38,10 @@
     @apply inline-block p-2 rounded;
   }
 
+  input, textarea, fieldset, select {
+    @apply block mb-2;
+  }
+
 }
 
 .container {

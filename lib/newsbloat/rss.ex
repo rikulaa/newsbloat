@@ -248,6 +248,7 @@ defmodule Newsbloat.RSS do
     query = from feed in Feed
     max_rows = 10
 
+    # TODO: Should use transaction for each individual feed (not for all). Can cause timeouts like this.
     Repo.transaction(fn() ->
       query
       |> Repo.stream([{ :max_rows, max_rows }])
@@ -255,7 +256,7 @@ defmodule Newsbloat.RSS do
       |> Enum.each(fn batch ->
         batch |> Enum.each(fn feed -> Newsbloat.RSS.fetch_feed_items(feed) end)
       end)
-    end)
+    end, timeout: 1000 * 60) # 1 minute
   end
 
 

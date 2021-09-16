@@ -3,6 +3,7 @@ defmodule Newsbloat.RSS.Item do
   import Ecto.Changeset
 
   alias Newsbloat.RSS.Item
+  alias Newsbloat.RSS.Feed
   alias HtmlSanitizeEx
 
   schema "items" do

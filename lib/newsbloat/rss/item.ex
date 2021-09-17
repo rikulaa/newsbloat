@@ -4,6 +4,7 @@ defmodule Newsbloat.RSS.Item do
 
   alias Newsbloat.RSS.Item
   alias Newsbloat.RSS.Feed
+  alias Newsbloat.RSS.Tag
   alias HtmlSanitizeEx
 
   schema "items" do
@@ -14,9 +15,12 @@ defmodule Newsbloat.RSS.Item do
     field :guid, :string
     field :link, :string
     field :published_at, :utc_datetime
+    # TODO: this should be a text field (in db)
     field :title, :string
     field :is_read, :boolean
     belongs_to :feed, Feed
+    many_to_many :tags, Tag,
+      join_through: "item_tags"
 
     timestamps()
   end
@@ -25,7 +29,6 @@ defmodule Newsbloat.RSS.Item do
   @spec with_safe_content_and_desc(%Item{}) :: %Item{}
   def with_safe_content_and_desc(%Item{ content: content, description: description } = item) do
     %{ item | safe_content: HtmlSanitizeEx.basic_html(content), safe_description: HtmlSanitizeEx.basic_html(description) }
-  
   end
 
   @doc false

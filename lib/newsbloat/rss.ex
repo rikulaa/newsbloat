@@ -9,6 +9,7 @@ defmodule Newsbloat.RSS do
 
   alias Newsbloat.RSS.Feed
   alias Newsbloat.RSS.Item
+  alias Newsbloat.RSS.Tag
 
   @doc """
   Returns the list of feeds.
@@ -141,6 +142,7 @@ defmodule Newsbloat.RSS do
   def get_feed_items(%Feed{} = feed) do
     query = from item in Item, where: item.feed_id == ^feed.id, order_by: [desc: item.id]
     Repo.all(query)
+    |> Repo.preload([tags: from(t in Tag, select: t.title)])
     |> Enum.map(&Item.with_safe_content_and_desc/1)
     
   end
@@ -152,34 +154,51 @@ defmodule Newsbloat.RSS do
     parsed_body = body
     |> Quinn.parse()
 
+    now = DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_naive()
+
+    all_parsed_rss_categories = parsed_body
+                           |> Quinn.find(:category)
+                           |> Enum.reduce([], fn cur, acc -> acc ++ cur.value end)
+    all_parsed_atom_categories = parsed_body
+                             |> Quinn.find(:category)
+                             |> Enum.reduce([], fn cur, acc -> acc ++ [cur.attr[:term]] end)
+    all_parsed_tags_flat = all_parsed_rss_categories ++ all_parsed_atom_categories |> Enum.uniq()
+
+    # Store every found tag in the database.
+    # In case the tag already exists, don't do anything to it
+    all_parsed_tags = all_parsed_tags_flat
+                      |>  Enum.reduce([], fn value, acc -> acc ++ [ %{ "title": value, "inserted_at": now, "updated_at": now} ] end)
+    Repo.insert_all(Tag, all_parsed_tags, on_conflict: :nothing)
+    # Fetch tags from db as the 'insert_all' on_conflict: :nothing, does not return the list of entries
+    all_tags = Repo.all(from t in Tag, where: t.title in ^all_parsed_tags_flat)
+
     # TODO: More robust checks and parsing for atom/rss items
     rss_items = parsed_body
-    |> Quinn.find(:item)
-    |> Enum.reverse()
-    |> Enum.map(
-      fn (item) -> 
-        %{ value: value } = item
+                |> Quinn.find(:item)
+                |> Enum.reverse()
+                |> Enum.map(
+                  fn (item) -> 
+                    %{ value: value } = item
 
-        content = get_value_from_map_list_by_key(value, :"content:encoded") || get_value_from_map_list_by_key(value, :content)
+                    content = get_value_from_map_list_by_key(value, :"content:encoded") || get_value_from_map_list_by_key(value, :content)
 
-        # TODO: fix the date parsing
-        now = DateTime.now("Etc/UTC")
-              |> (fn {:ok, date} -> date end).()
-              |> DateTime.truncate(:second)
+                    tag_titles = item |> Quinn.find(:category) |> Enum.reduce([], fn cur, acc -> acc ++ cur.value end)
 
-        %Item{} 
-        |> Item.changeset(%{
-            # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
-          published_at: now, 
-          guid: get_value_from_map_list_by_key(value, :guid),
-          title: get_value_from_map_list_by_key(value, :title),
-          link: get_value_from_map_list_by_key(value, :link),
-          description: get_value_from_map_list_by_key(value, :description),
-          content: content,
-          feed_id: feed.id,
-        })
-        |>  Ecto.Changeset.put_change(:feed_id, feed.id)
-    end)
+                    %Item{} 
+                    |> Item.changeset(%{
+                    # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
+                    # TODO: fix the date parsing
+                      published_at: now, 
+                      guid: get_value_from_map_list_by_key(value, :guid),
+                      title: get_value_from_map_list_by_key(value, :title),
+                      link: get_value_from_map_list_by_key(value, :link),
+                      description: get_value_from_map_list_by_key(value, :description),
+                      content: content,
+                      feed_id: feed.id,
+                    })
+                    |> Ecto.Changeset.put_change(:feed_id, feed.id)
+                    |> Ecto.Changeset.put_assoc(:tags, all_tags |> Enum.filter(fn t -> Enum.member?(tag_titles, t.title) end))
+                  end)
 
     atom_items = parsed_body
                  |> Quinn.find(:entry)
@@ -189,15 +208,12 @@ defmodule Newsbloat.RSS do
                      %{ value: value } = item
 
                      content = get_value_from_map_list_by_key(value, :content) || get_value_from_map_list_by_key(value, :summary)
-
-                    # TODO: fix the date parsing
-                     now = DateTime.now("Etc/UTC")
-                           |> (fn {:ok, date} -> date end).()
-                           |> DateTime.truncate(:second)
+                     tag_titles = item |> Quinn.find(:category) |> Enum.reduce([], fn cur, acc -> acc ++ [cur.attr[:term]] end)
 
                      %Item{} 
                      |> Item.changeset(%{
                       # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
+                      # TODO: fix the date parsing
                        published_at: now, 
                        guid: get_value_from_map_list_by_key(value, :id),
                        title: get_value_from_map_list_by_key(value, :title),
@@ -206,7 +222,8 @@ defmodule Newsbloat.RSS do
                        content: content,
                        feed_id: feed.id,
                      })
-                     |>  Ecto.Changeset.put_change(:feed_id, feed.id)
+                     |> Ecto.Changeset.put_change(:feed_id, feed.id)
+                     |> Ecto.Changeset.put_assoc(:tags, all_tags |> Enum.filter(fn t -> Enum.member?(tag_titles, t.title) end))
                    end)
 
     # Filter out any existing items we have

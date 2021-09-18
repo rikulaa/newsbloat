@@ -21,8 +21,7 @@ defmodule Newsbloat.RSS do
 
   """
   def list_feeds do
-    tags_query = from(t in Tag, select: t.title)
-    Repo.all(from f in Feed, preload: [tags: ^tags_query])
+    Repo.all(from f in Feed, preload: [:tags])
   end
 
   @doc """
@@ -40,8 +39,7 @@ defmodule Newsbloat.RSS do
 
   """
   def get_feed!(id) do
-    tags_query = from(t in Tag, select: t.title)
-    Repo.one(from feed in Feed, where: feed.id == ^id, preload: [tags: ^tags_query])
+    Repo.one(from feed in Feed, where: feed.id == ^id, preload: [:tags])
   end
 
   @doc """
@@ -181,10 +179,12 @@ defmodule Newsbloat.RSS do
     atom_feed_categories =  parsed_body |> Quinn.find(:feed) |> List.first() |> (fn first -> if first != nil, do: first, else: %{} end).() |> Map.get(:value, [ %{ name: nil } ]) |> Enum.filter(fn x -> x.name == :category end) |> Enum.reduce([], fn cur, acc -> acc ++ [cur.attr[:term]] end)
     feed_categories = rss_feed_categories ++ atom_feed_categories
 
-    feed = Repo.preload(feed, [:tags])
+    # Make sure 'tags' are loaded for feed
+    feed = Repo.one(from(f in Feed, where: f.id == ^feed.id, preload: [:tags]))
+    updated_tags_for_feed = all_tags |> Enum.filter(fn t -> Enum.member?(feed_categories, t.title) end) |> Enum.concat(feed.tags) 
     feed
     |> Feed.changeset(Map.from_struct(feed))
-    |> Ecto.Changeset.put_assoc(:tags, all_tags |> Enum.filter(fn t -> Enum.member?(feed_categories, t.title) end) |> Enum.concat(feed.tags) )
+    |> Ecto.Changeset.put_assoc(:tags, updated_tags_for_feed)
     |> Repo.update()
 
 

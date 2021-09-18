@@ -26,6 +26,7 @@ defmodule Newsbloat.RSS.Item do
   end
 
   # TODO: maybe cache these ?
+  # TODO: all links should be external (target="_blank", noreferer)
   @spec with_safe_content_and_desc(%Item{}) :: %Item{}
   def with_safe_content_and_desc(%Item{ content: content, description: description } = item) do
     %{ item | safe_content: HtmlSanitizeEx.basic_html(content), safe_description: HtmlSanitizeEx.basic_html(description) }

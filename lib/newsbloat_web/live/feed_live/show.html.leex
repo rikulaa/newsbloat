@@ -12,7 +12,7 @@
   <h2> <%= @feed.title %> <%= @id %></h2>
   <div class="">
     <%= for t <- @feed.tags do %>
-      <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t %></span>
+      <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
     <% end %>
   </div>
 
@@ -38,7 +38,7 @@
       <%= if item.id == @item_id do %>
         <div class="">
           <%= for t <- item.tags do %>
-            <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t %></span>
+            <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
           <% end %>
         </div>
         <p>

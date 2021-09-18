@@ -137,12 +137,23 @@ defmodule Newsbloat.RSS do
   end
 
   def get_feed_item(%Feed{} = feed, item_id) do
-    query = from item in Item, where: item.feed_id == ^feed.id and item.id == ^item_id, order_by: [desc: item.id]
+    query = from(
+      item in Item,
+      where: item.feed_id == ^feed.id and item.id == ^item_id,
+      order_by: [desc: item.id],
+      preload: [:tags]
+    )
     Repo.one(query)
     |> Item.with_safe_content_and_desc()
   end
+
   def get_feed_items(%Feed{} = feed) do
-    query = from item in Item, where: item.feed_id == ^feed.id, order_by: [desc: item.id]
+    query = from(
+      item in Item,
+      where: item.feed_id == ^feed.id,
+      order_by: [desc: item.id],
+      preload: [:tags]
+    )
     Repo.all(query)
     |> Repo.preload([tags: from(t in Tag, select: t.title)])
     |> Enum.map(&Item.with_safe_content_and_desc/1)

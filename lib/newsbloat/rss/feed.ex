@@ -3,12 +3,15 @@ defmodule Newsbloat.RSS.Feed do
   import Ecto.Changeset
 
   alias Newsbloat.RSS.Item
+  alias Newsbloat.RSS.Tag
 
   schema "feeds" do
     field :description, :string
     field :url, :string
     field :title, :string
     has_many :items, Item
+    many_to_many :tags, Tag,
+      join_through: "feed_tags"
 
     timestamps()
   end

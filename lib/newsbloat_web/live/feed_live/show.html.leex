@@ -10,6 +10,11 @@
 <%= live_component NewsbloatWeb.FeedLive.FeedListComponent, current_feed: @feed %>
 <section class="container mx-auto">
   <h2> <%= @feed.title %> <%= @id %></h2>
+  <div class="">
+    <%= for t <- @feed.tags do %>
+      <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+    <% end %>
+  </div>
 
   <button phx-click="refresh_feed">Refresh</button>
   <span><%= live_patch "Edit", to: Routes.feed_show_path(@socket, :edit, @feed), class: "button" %></span>
@@ -18,7 +23,7 @@
 
   <%= for item <- @items do %>
     <div>
-      <h3 id="<%= item.id %>" class="mb-2">
+      <h3 id="<%= item.id %>" class="mb-2 flex">
         <%= if item.id == @item_id do %>
           <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
         <% else %>
@@ -31,6 +36,11 @@
       </h3>
 
       <%= if item.id == @item_id do %>
+        <div class="">
+          <%= for t <- item.tags do %>
+            <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+          <% end %>
+        </div>
         <p>
         [<%= render_component "external_link.html", text: "Link", href: item.link %>]
         </p>

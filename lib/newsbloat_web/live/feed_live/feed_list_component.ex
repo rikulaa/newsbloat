@@ -21,6 +21,7 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
     end)
   end
 
+  # TODO: this component should be at root level with connected socket (without needing to do full re-render on page changes)
   def render(assigns) do
     get_feed_title = fn feed, unread_count ->
       if unread_count != 0 do
@@ -31,21 +32,23 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
     end
 
     ~L"""
-    <section class="fixed top-0 p-4 w-64 h-screen">
-    <h3>Feeds</h3>
+    <section x-data="{ isOpen: false }" x-bind:class="isOpen ? 'bg-white w-64 shadow-lg h-screen' : 'bg-transparent w-0'" class="fixed top-0 p-4">
+      <button class="bg-white" @click="isOpen = ! isOpen">Toggle</button>
+      <div x-show="isOpen">
+        <h3>Feeds</h3>
 
-    <ul>
-      <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
-        <li>
+        <ul>
+        <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
+          <li>
           <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if @current_feed.id == feed.id, do: "w-full truncate active", else: "truncate w-full" %>
-        </li>
+          </li>
 
-      <% end %>
-      <li>
+          <% end %>
+        <li>
         <span><%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new) %></span>
-      </li>
-    </ul>
-
+        </li>
+        </ul>
+      </div>
     </section>
     """
   end

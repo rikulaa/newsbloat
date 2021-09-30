@@ -9,7 +9,7 @@
 
 <%= live_component NewsbloatWeb.FeedLive.FeedListComponent, current_feed: @feed %>
 <section class="container mx-auto">
-  <h2> <%= @feed.title %> <%= @id %></h2>
+  <h2> <%= @feed.title %></h2>
   <div class="">
     <%= for t <- @feed.tags do %>
       <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>

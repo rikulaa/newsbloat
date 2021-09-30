@@ -280,7 +280,7 @@ defmodule Newsbloat.RSS do
   end
 
   def mark_item_as_read(%Item{} = item) do
-    update_item(item, %{ "is_read": true })
+    update_item(item, %{ is_read: true })
   end
 
   def get_feed_items_unread_count!(feed) do

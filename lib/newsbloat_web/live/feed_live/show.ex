@@ -28,7 +28,7 @@ defmodule NewsbloatWeb.FeedLive.Show do
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:feed, feed)
-     |> assign(:items, RSS.get_feed_items(feed))
+     |> assign(:items, RSS.list_feed_items(feed))
      |> assign(:item_id, item_id)
     }
   end
@@ -39,6 +39,7 @@ defmodule NewsbloatWeb.FeedLive.Show do
     |> assign(:feed, %Feed{})
   end
 
+  @impl true
   def handle_event("refresh_feed", _, socket) do
     {:ok, _ } = Newsbloat.RSS.fetch_feed_items(socket.assigns.feed)
     {:noreply, push_redirect(socket, to: Routes.feed_show_path(socket, :show, socket.assigns.feed))}

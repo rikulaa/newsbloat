@@ -148,7 +148,7 @@ defmodule Newsbloat.RSS do
     item
   end
 
-  def get_feed_items(%Feed{} = feed) do
+  def list_feed_items(%Feed{} = feed) do
     query = from(
       item in Item,
       where: item.feed_id == ^feed.id,

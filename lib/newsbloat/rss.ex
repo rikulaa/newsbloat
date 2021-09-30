@@ -143,8 +143,9 @@ defmodule Newsbloat.RSS do
       order_by: [desc: item.id],
       preload: [:tags]
     )
-    Repo.one(query)
+    item = Repo.one(query)
     |> Item.with_safe_content_and_desc()
+    item
   end
 
   def get_feed_items(%Feed{} = feed) do

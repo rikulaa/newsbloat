@@ -30,7 +30,7 @@ defmodule Newsbloat.RSS.Item do
   @spec with_safe_content_and_desc(%Item{}) :: %Item{}
   def with_safe_content_and_desc(%Item{ content: content, description: description } = item) do
     # Not really the most robust method... it only works as because we rely that the links are in the following format '<a href=".."></a>'
-    links_to_external_links = fn content -> Regex.replace(~r/\<a/, content, to_string('<a target="_blank" rel="noreferrer noopener"')) end
+    links_to_external_links = fn content -> Regex.replace(~r/\<a/, content, to_string('<a class="external" target="_blank" rel="noreferrer noopener"')) end
 
     safe_content = HtmlSanitizeEx.basic_html(content) |> links_to_external_links.()
     safe_description = HtmlSanitizeEx.basic_html(description) |> links_to_external_links.()

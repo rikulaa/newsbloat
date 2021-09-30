@@ -49,6 +49,7 @@ defmodule Newsbloat.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.8"},
       {:quinn, "~> 1.1"},
+      {:scrivener_ecto, "~> 2.0"},
       {:timex, "~> 3.7"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
     ]

@@ -23,12 +23,13 @@ defmodule NewsbloatWeb.FeedLive.Show do
       RSS.mark_item_as_read(item)
     end
 
+    page = RSS.list_feed_items(feed)
 
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:feed, feed)
-     |> assign(:items, RSS.list_feed_items(feed))
+     |> assign(:page, page)
      |> assign(:item_id, item_id)
     }
   end

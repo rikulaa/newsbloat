@@ -12,10 +12,13 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
   end
 
   defp list_feeds do
-    RSS.list_feeds()
+    page = RSS.list_feeds()
+
+    page
     |> Enum.map(fn feed ->
       %{
         :feed => feed,
+        # TODO: probably should fetch unread count with the same query, not like this
         :unread_count => RSS.get_feed_items_unread_count!(feed)
       }
     end)

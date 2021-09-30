@@ -20,8 +20,11 @@ defmodule Newsbloat.RSS do
       [%Feed{}, ...]
 
   """
-  def list_feeds do
-    Repo.all(from f in Feed, preload: [:tags])
+  def list_feeds() do
+    query = from(f in Feed, preload: [:tags])
+
+    query
+    |> Repo.paginate()
   end
 
   @doc """
@@ -155,9 +158,12 @@ defmodule Newsbloat.RSS do
       order_by: [desc: item.id],
       preload: [:tags]
     )
-    Repo.all(query)
-    |> Repo.preload([tags: from(t in Tag, select: t.title)])
-    |> Enum.map(&Item.with_safe_content_and_desc/1)
+    page = Repo.paginate(query)
+
+    # Apparently, if we try to enumerate the 'page' directly, it will provide us the 'page.entries'.
+    # Is this some 'collectables' magic?
+    page
+    |> Map.put(:entries, Enum.map(page.entries, &Item.with_safe_content_and_desc/1))
     
   end
 

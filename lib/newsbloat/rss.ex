@@ -151,14 +151,14 @@ defmodule Newsbloat.RSS do
     item
   end
 
-  def list_feed_items(%Feed{} = feed) do
+  def list_feed_items(%Feed{} = feed, page) do
     query = from(
       item in Item,
       where: item.feed_id == ^feed.id,
       order_by: [desc: item.id],
       preload: [:tags]
     )
-    page = Repo.paginate(query)
+    page = query |> Repo.paginate(page: page)
 
     # Apparently, if we try to enumerate the 'page' directly, it will provide us the 'page.entries'.
     # Is this some 'collectables' magic?

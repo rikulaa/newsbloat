@@ -21,37 +21,38 @@
   <button phx-click="mark_all_as_read">Mark all as read</button>
   <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index) %></span>
 
-  <%= for item <- @page.entries do %>
-    <div>
-      <h3 id="<%= item.id %>" class="mb-2 flex">
-        <%= if item.id == @item_id do %>
-          <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
-        <% else %>
-          <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed, item.id)<>"#"<>to_string(item.id) %>
-        <% end %>
-
-        <%= if not item.is_read do %>
-          (!)
-        <% end %>
-      </h3>
-
-      <%= if item.id == @item_id do %>
-        <div class="">
-          <%= for t <- item.tags do %>
-            <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+  <div id="items" phx-update="append">
+    <%= for item <- @page.entries do %>
+      <div id="<%= item.id %>">
+        <h3 class="mb-2 flex">
+          <%= if item.id == @item_id do %>
+            <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
+          <% else %>
+            <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed, item.id)<>"#"<>to_string(item.id) %>
           <% end %>
-        </div>
-        <p>
-        [<%= render_component "external_link.html", text: "Link", href: item.link %>]
-        </p>
-        <div>
-          <p><%= item.safe_description |> raw %></p>
-          <p><%= item.safe_content |> raw %></p>
-        </div>
-      <% end %>
 
-    </div>
+          <%= if not item.is_read do %>
+            (!)
+          <% end %>
+        </h3>
 
-  <% end %>
+        <%= if item.id == @item_id do %>
+          <div class="">
+            <%= for t <- item.tags do %>
+              <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+            <% end %>
+          </div>
+          <p>
+          [<%= render_component "external_link.html", text: "Link", href: item.link %>]
+          </p>
+          <div>
+            <p><%= item.safe_description |> raw %></p>
+            <p><%= item.safe_content |> raw %></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div id="infinite-scoll-hook" phx-hook="InfiniteScroll" data-page="<%= @page.page_number %>"></div>
 
 </section>

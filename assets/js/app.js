@@ -18,6 +18,8 @@ import topbar from "topbar"
 import {LiveSocket} from "phoenix_live_view"
 import Alpine from 'alpinejs'
 
+import InfiniteScroll from './hooks/infinitescroll.js';
+
 // Initialize alpine
 window.Alpine = Alpine
  
@@ -26,6 +28,7 @@ Alpine.start()
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: { InfiniteScroll },
   // Make liveviews work together with alpine
   dom: {
     onBeforeElUpdated(from, to) {

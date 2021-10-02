@@ -289,6 +289,25 @@ defmodule Newsbloat.RSS do
     update_item(item, %{ is_read: true })
   end
 
+  def mark_item_as_favoured(%Item{} = item) do
+    favourite_tag = Repo.one(from t in Tag, where: t.title == "Favourite")
+    tags = item |> Map.get(:tags)
+
+    item
+    |> Item.changeset(%{})
+    |> Ecto.Changeset.put_assoc(:tags, [favourite_tag | tags])
+    |> Repo.update()
+  end
+  def mark_item_as_non_favoured(%Item{} = item) do
+    favourite_tag = Repo.one(from t in Tag, where: t.title == "Favourite")
+    tags = item |> Map.get(:tags) |> Enum.filter(fn t -> t.id != favourite_tag.id end)
+
+    item
+    |> Item.changeset(%{})
+    |> Ecto.Changeset.put_assoc(:tags, tags, [%{}])
+    |> Repo.update()
+  end
+
   def get_feed_items_unread_count!(feed) do
     [count] = Repo.all(
       from i in Item, where: [feed_id: ^feed.id, is_read: false], select: count(i.id)

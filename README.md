@@ -26,3 +26,28 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - [ ] User authentication
 - [ ] Deployment
 - [ ] Item: ERROR 22001 (string_data_right_truncation) value too long for type character varying(255)
+
+== Infinite scroll
+
+Uses pagination underneath.
+
+
+Custom pagination?
+
+
+Some sort of 'decoration' function which takes:
+* limit (page size)
+* page
+
+returns:
+
+* page (current)
+* total_pages (overall)
+* has_next_page
+* has_previous_page
+* count
+
+
+== infinite scroll
+
+https://adrian-philipp.com/notes/how-to-implement-infinite-scroll-with-phoenix-liveview

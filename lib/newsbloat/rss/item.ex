@@ -20,7 +20,7 @@ defmodule Newsbloat.RSS.Item do
     field :is_read, :boolean
     belongs_to :feed, Feed
     many_to_many :tags, Tag,
-      join_through: "item_tags"
+      join_through: "item_tags", on_replace: :delete
 
     timestamps()
   end

@@ -42,6 +42,11 @@
               <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
             <% end %>
           </div>
+          <%= if item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
+            <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= item.id %>">Remove from favourites</button>
+          <% else %>
+            <button phx-click="mark_as_favoured" phx-value-item_id="<%= item.id %>">Add to favourites</button>
+          <% end %>
           <p>
           [<%= render_component "external_link.html", text: "Link", href: item.link %>]
           </p>

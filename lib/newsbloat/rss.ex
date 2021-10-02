@@ -167,6 +167,35 @@ defmodule Newsbloat.RSS do
     
   end
 
+  @doc """
+  Returns the list of items which match given search parameter.
+
+  ## Examples
+
+      iex> list_feeds()
+      [%Feed{}, ...]
+
+  """
+  def search_items(q \\ "") do
+    sql = " 
+      SELECT id
+      FROM 	(SELECT 
+                      items.id,
+                      to_tsvector(items.title || ' ') || 
+                      to_tsvector(items.description || ' ') ||
+                      to_tsvector(items.content) as document
+              FROM items
+              GROUP BY items.id) items_search
+      WHERE items_search.document @@ to_tsquery($1)
+    "
+    {:ok, %{ rows: rows }} = Repo.query(sql, [q])
+    ids = rows |> Enum.map(&List.first(&1))
+
+    from(i in Item, where: i.id in ^ids, preload: [:feed])
+    |> Repo.all()
+  end
+
+
   def fetch_feed_items(%Feed{} = feed) do
     IO.puts(feed.title)
     {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(feed.url)

@@ -1,0 +1,23 @@
+<%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
+<section class="container mx-auto">
+  <h2 class="flex">
+    Search
+  </h2>
+  <form phx-change="search">
+    <div class="inputs">
+      <input type="text" name="input" value="<%= @q %>" phx-debounce="300">
+    </div>
+    <div class="loader">Ladataan...</div>
+  </form>
+
+  <div>
+    <%= for item <- @results do %>
+        <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id) %>
+      
+    <% end %>
+    
+  </div>
+
+
+
+</section>

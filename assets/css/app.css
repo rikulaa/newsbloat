@@ -73,6 +73,13 @@ button, .button {
 }
 /* lists */
 
+/* loader */
+.loader {
+  @apply hidden
+}
+.phx-change-loading .loader {
+  @apply inline-block;
+}
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,

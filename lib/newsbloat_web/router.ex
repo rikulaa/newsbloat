@@ -34,6 +34,8 @@ defmodule NewsbloatWeb.Router do
     live "/feeds/:id/items/:item_id", FeedLive.ShowItem, :show
     live "/feeds/:id/:item_id", FeedLive.Show, :show
 
+    live "/search", SearchLive.Index, :index
+
   end
 
   # Other scopes may use custom stacks.

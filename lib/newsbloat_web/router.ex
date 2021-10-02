@@ -31,6 +31,7 @@ defmodule NewsbloatWeb.Router do
     live "/feeds/:id", FeedLive.Show, :show
     live "/feeds/:id/new", FeedLive.Show, :new
     live "/feeds/:id/show/edit", FeedLive.Show, :edit
+    live "/feeds/:id/items/:item_id", FeedLive.ShowItem, :show
     live "/feeds/:id/:item_id", FeedLive.Show, :show
 
   end

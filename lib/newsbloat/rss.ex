@@ -179,16 +179,25 @@ defmodule Newsbloat.RSS do
   def search_items(q \\ "") do
     sql = " 
       SELECT id
-      FROM 	(SELECT 
-                      items.id,
-                      to_tsvector(items.title || ' ') || 
-                      to_tsvector(items.description || ' ') ||
-                      to_tsvector(items.content) as document
-              FROM items
-              GROUP BY items.id) items_search
+      FROM 	(
+        SELECT 
+        items.id,
+        items.description,
+        (
+            to_tsvector(coalesce(items.title, '')) || 
+            to_tsvector(coalesce(items.description, '')) ||
+            to_tsvector(coalesce(items.content, '')) ||
+            to_tsvector(coalesce(string_agg(tags.title, ' '), ''))
+        ) as document
+        FROM items
+        LEFT OUTER  JOIN item_tags ON item_tags.item_id = items.id
+        LEFT OUTER  JOIN tags ON tags.id = item_tags.tag_id		
+        GROUP BY items.id
+      ) items_search
       WHERE items_search.document @@ to_tsquery($1)
     "
-    {:ok, %{ rows: rows }} = Repo.query(sql, [q])
+    query_string = Regex.replace(~r/\s/, q, "") <> ":*"
+    {:ok, %{ rows: rows }} = Repo.query(sql, [query_string])
     ids = rows |> Enum.map(&List.first(&1))
 
     from(i in Item, where: i.id in ^ids, preload: [:feed])

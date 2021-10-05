@@ -196,12 +196,17 @@ defmodule Newsbloat.RSS do
       ) items_search
       WHERE items_search.document @@ to_tsquery($1)
     "
-    query_string = Regex.replace(~r/\s/, q, "") <> ":*"
-    {:ok, %{ rows: rows }} = Repo.query(sql, [query_string])
-    ids = rows |> Enum.map(&List.first(&1))
+    trimmed_query_string = Regex.replace(~r/\s/, q, "")
+    if String.length(trimmed_query_string) > 0 do
+      query_string = trimmed_query_string  <> ":*"
+      {:ok, %{ rows: rows }} = Repo.query(sql, [query_string])
+      ids = rows |> Enum.map(&List.first(&1))
 
-    from(i in Item, where: i.id in ^ids, preload: [:feed])
-    |> Repo.all()
+      from(i in Item, where: i.id in ^ids, preload: [:feed])
+      |> Repo.all()
+    else
+      []
+    end
   end
 
 

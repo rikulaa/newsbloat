@@ -25,9 +25,7 @@ defmodule NewsbloatWeb.SearchLive.Index do
 
   @impl true
   def handle_event("search", params, socket) do
-    search_string = params |> Map.get("input", "")
-    IO.inspect("query")
-    IO.inspect(search_string)
+    search_string = params |> Map.get("input", "") |> String.replace(~r/\s/, "")
 
     {:noreply,
      push_patch(socket, to: Routes.search_index_path(socket, :index, %{"q" => search_string}))}

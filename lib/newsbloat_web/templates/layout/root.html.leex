@@ -9,7 +9,10 @@
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body class="text-primary bg-secondary">
+  <body>
+    <%# https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer#57888310 %>
+    <script>0</script>
+    <!-- rest of the code -->
     <header>
       <section class="container mx-auto">
         <nav role="navigation">

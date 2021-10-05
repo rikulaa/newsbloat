@@ -2,10 +2,62 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@media (prefers-color-scheme: dark) {
+    --color-primary: rgb(227, 228, 233);
+    --color-secondary: #1b1b1b;
+    --color-ancillary: #AC9779;
+    --color-foreground: rgb(227, 228, 233);
+    --color-background: #1b1b1b;
+    fill: currentColor;
+    .theme-light-hidden * {
+        display: none;
+    }
+}
+@media (prefers-color-scheme: light) {
+    --color-primary: #242424;
+    --color-secondary: #ffffff;
+    --color-ancillary: #b5b5b5;
+    --color-foreground: #242424;
+    --color-background: #ffffff;
+    fill: currentColor;
+    .theme-dark-hidden * {
+        display: none;
+    }
+}
+
+/* use dark theme by default so eye's won't be burned by accident */
+html[data-theme="dark"] {
+    --color-primary: rgb(227, 228, 233);
+    --color-secondary: #1b1b1b;
+    --color-ancillary: #AC9779;
+    --color-foreground: rgb(227, 228, 233);
+    --color-background: #1b1b1b;
+    fill: currentColor;
+    .theme-light-hidden * {
+        display: none;
+    }
+}
+html[data-theme="light"] {
+    --color-primary: #242424;
+    --color-secondary: #ffffff;
+    --color-ancillary: #b5b5b5;
+    --color-foreground: #242424;
+    --color-background: #ffffff;
+    fill: currentColor;
+    .theme-dark-hidden * {
+        display: none;
+    }
+}
+
+
+
 /* This file is for your main application css. */
 /* @import "./phoenix.css"; */
 
 @layer base {
+  ::selection {
+    @apply bg-ancillary;
+  }
   body {
     @apply text-base;
   }

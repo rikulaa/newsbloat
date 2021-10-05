@@ -1,3 +1,11 @@
+const COLORS = {
+  primary: "var(--color-primary)",
+  secondary: "var(--color-secondary)",
+  ancillary: "var(--color-ancillary)",
+  foreground: "var(--color-foreground)",
+  background: "var(--color-background)",
+}
+
 // tailwind.config.js
 module.exports = {
   purge: [
@@ -9,7 +17,9 @@ module.exports = {
 
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: COLORS
+    },
   },
   variants: {},
   plugins: [],

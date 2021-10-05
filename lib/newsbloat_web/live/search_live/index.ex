@@ -17,7 +17,10 @@ defmodule NewsbloatWeb.SearchLive.Index do
     q = params |> Map.get("q", "")
     results = if String.length(q) > 0 do RSS.search_items(q) else [] end
 
-    {:noreply, socket |> assign(:results, results)}
+    {:noreply, socket
+    |> assign(:results, results)
+    |> assign(:q, q)
+    }
   end
 
   @impl true

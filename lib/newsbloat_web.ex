@@ -103,6 +103,10 @@ defmodule NewsbloatWeb do
       import NewsbloatWeb.ErrorHelpers
       import NewsbloatWeb.Gettext
       alias NewsbloatWeb.Router.Helpers, as: Routes
+
+      def current_ui_theme(conn) do
+        Plug.Conn.get_session(conn, :ui_theme)
+      end
     end
   end
 

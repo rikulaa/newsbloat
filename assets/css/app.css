@@ -110,7 +110,7 @@ html.light {
     @apply inline-block;
   }
   button, .button {
-    @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none;
+    @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none cursor-pointer bg-transparent leading-normal ;
     &:hover {
       @apply text-background transition-all;
       background-size: 100% 100%;

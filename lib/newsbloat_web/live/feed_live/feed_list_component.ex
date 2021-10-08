@@ -40,14 +40,26 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
       <div x-show="isOpen">
         <h3>Feeds</h3>
 
-        <ul>
+        <ul class="mb-4">
           <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
             <li>
             <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if @current_feed.id == feed.id, do: "link p-2 w-full truncate active", else: "link p-2 truncate w-full" %>
             </li>
           <% end %>
+        </ul>
+        <ul class="mb-4">
           <li>
             <%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new), class: "link p-2" %>
+          </li>
+        </ul>
+        <ul class="mb-4">
+          <li>
+              <a href="/" class="link p-2">
+                Home
+              </a>
+          </li>
+          <li class="ml-auto mr-0">
+            <li><%= link "Search", to: Routes.search_index_path(@socket, :index), class: "link p-2" %></li>
           </li>
         </ul>
       </div>

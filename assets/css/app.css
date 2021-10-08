@@ -147,9 +147,10 @@ html.light {
   max-width: 45rem;
 }
 
-button, .button {
-  @apply border border-foreground leading-normal bg-transparent cursor-pointer;
+.icon {
+  fill: currentColor;
 }
+
 
 .active:not(:hover) {
   @apply text-ancillary;

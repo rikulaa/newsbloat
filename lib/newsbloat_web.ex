@@ -107,6 +107,15 @@ defmodule NewsbloatWeb do
       def current_ui_theme(conn) do
         Plug.Conn.get_session(conn, :ui_theme)
       end
+
+      def icon_tag(conn, name, opts \\ []) do
+        classes = Keyword.get(opts, :class, "") <> " icon"
+
+        # TODO: cache these
+        content_tag(:svg, class: classes) do
+          File.read!("priv/static/icons/" <> name <>".svg") |> raw()
+        end
+      end
     end
   end
 

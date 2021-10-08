@@ -35,21 +35,20 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
     end
 
     ~L"""
-    <section x-data="{ isOpen: false }" x-bind:class="isOpen ? 'bg-white w-64 shadow-lg h-screen' : 'bg-transparent w-0'" class="fixed top-0 p-4">
-      <button class="bg-white" @click="isOpen = ! isOpen">Toggle</button>
+    <section x-data="{ isOpen: false }" x-bind:class="isOpen ? 'bg-background w-64 shadow-lg h-screen' : 'bg-transparent w-0'" class="fixed top-0 p-4">
+      <button class="bg-background" @click="isOpen = ! isOpen">Toggle</button>
       <div x-show="isOpen">
         <h3>Feeds</h3>
 
         <ul>
-        <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
-          <li>
-          <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if @current_feed.id == feed.id, do: "w-full truncate active", else: "truncate w-full" %>
-          </li>
-
+          <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
+            <li>
+            <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if @current_feed.id == feed.id, do: "link p-2 w-full truncate active", else: "link p-2 truncate w-full" %>
+            </li>
           <% end %>
-        <li>
-        <span><%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new) %></span>
-        </li>
+          <li>
+            <%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new), class: "link p-2" %>
+          </li>
         </ul>
       </div>
     </section>

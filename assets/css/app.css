@@ -1,12 +1,14 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "components/link";
 
 @media (prefers-color-scheme: dark) {
-    --color-primary: rgb(227, 228, 233);
+    --color-primary: #e3e4e9;
     --color-secondary: #1b1b1b;
     --color-ancillary: #AC9779;
-    --color-foreground: rgb(227, 228, 233);
+
+    --color-foreground: #e3e4e9;
     --color-background: #1b1b1b;
     fill: currentColor;
     .theme-light-hidden * {
@@ -17,6 +19,7 @@
     --color-primary: #242424;
     --color-secondary: #ffffff;
     --color-ancillary: #b5b5b5;
+
     --color-foreground: #242424;
     --color-background: #ffffff;
     fill: currentColor;
@@ -26,21 +29,23 @@
 }
 
 /* use dark theme by default so eye's won't be burned by accident */
-html[data-theme="dark"] {
-    --color-primary: rgb(227, 228, 233);
+html.dark {
+    --color-primary: #e3e4e9;
     --color-secondary: #1b1b1b;
     --color-ancillary: #AC9779;
-    --color-foreground: rgb(227, 228, 233);
+    
+    --color-foreground: #e3e4e9;
     --color-background: #1b1b1b;
     fill: currentColor;
     .theme-light-hidden * {
         display: none;
     }
 }
-html[data-theme="light"] {
+html.light {
     --color-primary: #242424;
     --color-secondary: #ffffff;
     --color-ancillary: #b5b5b5;
+
     --color-foreground: #242424;
     --color-background: #ffffff;
     fill: currentColor;
@@ -59,7 +64,10 @@ html[data-theme="light"] {
     @apply bg-ancillary;
   }
   body {
-    @apply text-base;
+    @apply text-base text-foreground bg-background;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply leading-5;
   }
   h1 {
     @apply text-5xl mt-10 mb-12;
@@ -80,10 +88,10 @@ html[data-theme="light"] {
     @apply text-base mt-1 mb-4;
   }
   p {
-    @apply mb-4;
+    @apply mb-4 leading-7;
   }
   a {
-    @apply text-blue-500;
+    @apply text-foreground;
   }
 
   a[target=_blank]:after {
@@ -98,14 +106,33 @@ html[data-theme="light"] {
     display: inline-block;
 }
 
-  a, button {
-    @apply inline-block p-2 rounded;
+  a {
+    @apply inline-block;
+  }
+  button, .button {
+    @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none;
+    &:hover {
+      @apply text-background transition-all;
+      background-size: 100% 100%;
+    }
+    &:focus {
+      @apply outline-none shadow-outline-foreground;
+    }
+    background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
+    background-size: 100% 0px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
   }
 
   input, textarea, fieldset, select {
     @apply block mb-2;
   }
-
+  input, textarea {
+    @apply w-full p-2 border-b border-foreground text-base bg-background outline-none transition-all shadow-none;
+    &:focus {
+      @apply outline-none border-ancillary 
+    }
+  }
 }
 
 .container {
@@ -115,13 +142,22 @@ html[data-theme="light"] {
     @apply px-8 !important;
   }
 }
-
-button, .button {
-  @apply text-black border border-black leading-normal bg-transparent m-0 cursor-pointer;
+.content {
+  /* https://baymard.com/blog/line-length-readability */
+  max-width: 45rem;
 }
 
-.active {
-  @apply bg-gray-100 text-gray-900;
+button, .button {
+  @apply border border-foreground leading-normal bg-transparent cursor-pointer;
+}
+
+.active:not(:hover) {
+  @apply text-ancillary;
+  background-image: linear-gradient(to top,var(--color-ancillary),var(--color-ancillary));
+  /* 0px => no 'text underline' */
+  background-size: 100% 2px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
 }
 /* lists */
 
@@ -161,27 +197,24 @@ button, .button {
   height: 100%;
   overflow: auto;
   background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.6);
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
+  @apply bg-background border border-ancillary p-8 pb-16;
   margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
   width: 80%;
 }
 
 .phx-modal-close {
-  color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .phx-modal-close:hover,
 .phx-modal-close:focus {
-  color: black;
+  /* color: black; */
   text-decoration: none;
   cursor: pointer;
 }
@@ -218,7 +251,6 @@ button, .button {
   display: none;
 }
 .invalid-feedback {
+  @apply mb-4 block;
   color: #a94442;
-  display: block;
-  margin: -1rem 0 2rem;
 }

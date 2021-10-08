@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="<%= current_ui_theme(@conn) %>">
+<html lang="en" class="<%= current_ui_theme(@conn) %>">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,6 +8,8 @@
     <%= live_title_tag assigns[:page_title] || "Newsbloat", suffix: " · Phoenix Framework" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <%# TODO: maybe use local font %>
+    <link async href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
   </head>
   <body>
     <%# https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer#57888310 %>
@@ -21,12 +23,12 @@
             <%#   <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %1></li> %>
             <%# <% end %1> %>
             <li>
-              <a href="/" class="">
+              <a href="/" class="link p-2">
                 Home
               </a>
             </li>
             <li class="ml-auto mr-0">
-              <li><%= link "Search", to: Routes.search_index_path(@conn, :index) %></li>
+              <li><%= link "Search", to: Routes.search_index_path(@conn, :index), class: "link p-2" %></li>
             </li>
           </ul>
         </nav>

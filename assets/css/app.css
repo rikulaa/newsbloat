@@ -133,6 +133,10 @@ html.light {
       @apply outline-none border-ancillary 
     }
   }
+
+  img {
+    @apply mb-4;
+  }
 }
 
 .container {

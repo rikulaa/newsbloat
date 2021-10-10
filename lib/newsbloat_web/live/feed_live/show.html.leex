@@ -27,7 +27,7 @@
   <div id="items" phx-update="append">
     <%= for item <- @page.entries do %>
       <div id="<%= item.id %>" class="mb-12">
-        <h3 class="mb-2 flex">
+        <h3 class="mb-2 relative">
           <%= if item.id == @item_id do %>
             <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
           <% else %>
@@ -35,7 +35,7 @@
           <% end %>
 
           <%= if not item.is_read do %>
-            (!)
+            <%= icon_tag(@socket, "control-record", class: "absolute -left-8 top-2 w-4 h-4") %>
           <% end %>
         </h3>
 

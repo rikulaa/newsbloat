@@ -110,11 +110,13 @@ defmodule NewsbloatWeb do
 
       def icon_tag(conn, name, opts \\ []) do
         classes = Keyword.get(opts, :class, "") <> " icon"
+        svg_starting_tag_with_classes = "<svg class='" <> classes <> "'"
 
         # TODO: cache these
-        content_tag(:svg, class: classes) do
-          File.read!("priv/static/icons/" <> name <>".svg") |> raw()
-        end
+        svg_tag = File.read!("priv/static/icons/" <> name <>".svg")
+                  # Yeah, not the most safe solution to manipulate html with regex...
+                  |> String.replace("<svg", svg_starting_tag_with_classes)
+                  |> raw()
       end
     end
   end

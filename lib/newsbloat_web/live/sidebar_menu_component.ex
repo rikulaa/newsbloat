@@ -78,7 +78,12 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
               </a>
           </li>
           <li class="ml-auto mr-0">
-            <li><%= link "Search", to: Routes.search_index_path(@socket, :index), class: "link p-2" %></li>
+          <li>
+            <%= link_with_html to: Routes.search_index_path(@socket, :index), class: "link p-2" do
+              {_, svg } = icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2")
+              Enum.join([svg, "Search"], " ")
+            end %>
+          </li>
           </li>
         </ul>
         <ul>

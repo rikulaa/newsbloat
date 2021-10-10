@@ -8,7 +8,7 @@
     --color-secondary: #1b1b1b;
     --color-ancillary: #AC9779;
 
-    --color-foreground: #e3e4e9;
+    --color-foreground: #adaeb3;
     --color-background: #1b1b1b;
     fill: currentColor;
     .theme-light-hidden * {
@@ -34,7 +34,7 @@ html.dark {
     --color-secondary: #1b1b1b;
     --color-ancillary: #AC9779;
     
-    --color-foreground: #e3e4e9;
+    --color-foreground: #adaeb3;
     --color-background: #1b1b1b;
     fill: currentColor;
     .theme-light-hidden * {

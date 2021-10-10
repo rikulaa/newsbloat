@@ -6,8 +6,11 @@ defmodule NewsbloatWeb.FeedLive.Index do
   alias Newsbloat.RSS.Feed
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :feeds, list_feeds())}
+  def mount(_params, session, socket) do
+    {:ok,
+     socket
+     |> assign_defaults_from_session(session)
+     |> assign(:feeds, list_feeds())}
   end
 
   @impl true

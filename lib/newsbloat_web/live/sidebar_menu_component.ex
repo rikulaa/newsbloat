@@ -1,4 +1,4 @@
-defmodule NewsbloatWeb.FeedLive.FeedListComponent do
+defmodule NewsbloatWeb.SidebarMenuComponent do
   use NewsbloatWeb, :live_component
 
   alias Newsbloat.RSS
@@ -7,8 +7,16 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
   def update(assings, socket) do
     {:ok,
      socket
+     |> merge_parent_assigns(assings)
      |> assign(:current_feed, Map.get(assings, :current_feed, %Feed{}))
      |> assign(:feeds, list_feeds())}
+  end
+
+  defp merge_parent_assigns(socket, assigns) do
+    merged_socket = Enum.reduce(assigns, socket, fn ({key, val}, updated_socket) ->
+      updated_socket |> assign(key, val)
+    end)
+    merged_socket
   end
 
   defp list_feeds do
@@ -26,11 +34,20 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
 
   # TODO: this component should be at root level with connected socket (without needing to do full re-render on page changes)
   def render(assigns) do
+    # IO.inspect ["assigns", assigns]
     get_feed_title = fn feed, unread_count ->
       if unread_count != 0 do
         feed.title <> " (" <> to_string(unread_count) <> ")"
       else
         feed.title
+      end
+    end
+
+    get_ui_theme_link = fn ui_theme ->
+      if ui_theme == "dark" do
+        "?ui_theme=light"
+      else
+        "?ui_theme=dark"
       end
     end
 
@@ -62,6 +79,14 @@ defmodule NewsbloatWeb.FeedLive.FeedListComponent do
           </li>
           <li class="ml-auto mr-0">
             <li><%= link "Search", to: Routes.search_index_path(@socket, :index), class: "link p-2" %></li>
+          </li>
+        </ul>
+        <ul>
+          <li>
+          <%= link_with_html to: Routes.path(@socket, get_ui_theme_link.(@ui_theme)), class: "link p-2" do
+            {_, svg } = icon_tag(@socket, "light-bulb", class: "w-4 h-4 inline-block mr-2")
+            Enum.join([svg, "Apperance: ", String.capitalize(@ui_theme)], " ")
+          end %>
           </li>
         </ul>
       </div>

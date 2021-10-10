@@ -4,8 +4,9 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
   alias Newsbloat.RSS
 
   @impl true
-  def mount(%{ "id" => id, "item_id" => item_id } = _params, _session, socket) do
+  def mount(%{ "id" => id, "item_id" => item_id } = _params, session, socket) do
     {:ok, socket 
+    |> assign_defaults_from_session(session)
     |> initialize(id, item_id)
     }
   end

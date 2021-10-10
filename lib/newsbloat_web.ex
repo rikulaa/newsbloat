@@ -118,6 +118,10 @@ defmodule NewsbloatWeb do
                   |> String.replace("<svg", svg_starting_tag_with_classes)
                   |> raw()
       end
+
+      def link_with_html(opts, do: content) do
+        link(content |> raw(), opts)
+      end
     end
   end
 

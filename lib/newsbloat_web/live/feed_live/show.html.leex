@@ -7,7 +7,8 @@
     return_to: Routes.feed_show_path(@socket, :show, @feed) %>
 <% end %>
 
-<%= live_component NewsbloatWeb.FeedLive.FeedListComponent, current_feed: @feed %>
+<%= live_component NewsbloatWeb.SidebarMenuComponent, current_feed: @feed, ui_theme: @ui_theme %>
+
 <section class="container content mx-auto mt-8 lg:mt-16">
   <h2 class="mb-8"> <%= @feed.title %></h2>
   <div class="mb-8">
@@ -25,7 +26,7 @@
 
   <div id="items" phx-update="append">
     <%= for item <- @page.entries do %>
-      <div id="<%= item.id %>">
+      <div id="<%= item.id %>" class="mb-12">
         <h3 class="mb-2 flex">
           <%= if item.id == @item_id do %>
             <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>

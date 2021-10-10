@@ -7,7 +7,7 @@
 
     <div class="">
       <%= for t <- @item.tags do %>
-        <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+        <span class="tag"><%= t.title %></span>
       <% end %>
     </div>
     <%= if @item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>

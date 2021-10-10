@@ -151,6 +151,10 @@ html.light {
   fill: currentColor;
 }
 
+.tag {
+  @apply inline-block p-1 rounded border border-foreground text-xs mr-1 mb-1;
+}
+
 
 .active:not(:hover) {
   @apply text-ancillary;

@@ -3,7 +3,7 @@
   <h2 class="flex">
     Search
   </h2>
-  <form phx-change="search">
+  <form phx-change="search" class="mb-8">
     <div class="inputs">
       <input type="text" name="input" value="<%= @q %>" phx-debounce="300" autofocus>
     </div>
@@ -12,8 +12,7 @@
 
   <div>
     <%= for item <- @results do %>
-        <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id) %>
-      
+      <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id), class: "block mb-1" %>
     <% end %>
     
   </div>

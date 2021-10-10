@@ -4,17 +4,6 @@
     <h2 class="flex">
       <%= @item.title %>
     </h2>
-
-    <div class="">
-      <%= for t <- @item.tags do %>
-        <span class="tag"><%= t.title %></span>
-      <% end %>
-    </div>
-    <%= if @item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
-      <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= @item.id %>">Remove from favourites</button>
-    <% else %>
-      <button phx-click="mark_as_favoured" phx-value-item_id="<%= @item.id %>">Add to favourites</button>
-    <% end %>
     <p>
     [<%= render_component "external_link.html", text: "Link", href: @item.link %>]
     </p>
@@ -22,5 +11,16 @@
       <p><%= @item.safe_description |> raw %></p>
       <p><%= @item.safe_content |> raw %></p>
     </div>
-
+    <div class="mb-4">
+      <%= for t <- @item.tags do %>
+        <span class="tag"><%= t.title %></span>
+      <% end %>
+    </div>
+    <div class="mb-8">
+      <%= if @item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
+        <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= @item.id %>">Remove from favourites</button>
+      <% else %>
+        <button phx-click="mark_as_favoured" phx-value-item_id="<%= @item.id %>">Add to favourites</button>
+      <% end %>
+    </div>
 </section>

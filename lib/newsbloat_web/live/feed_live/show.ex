@@ -2,7 +2,6 @@ defmodule NewsbloatWeb.FeedLive.Show do
   use NewsbloatWeb, :live_view
 
   alias Newsbloat.RSS
-  alias Newsbloat.RSS.Feed
 
   alias NewsbloatWeb.Router.Helpers, as: Routes
 
@@ -63,12 +62,13 @@ defmodule NewsbloatWeb.FeedLive.Show do
     RSS.list_feed_items(feed, page)
   end
 
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Feed")
-    |> assign(:feed, %Feed{})
-  end
+  # defp apply_action(socket, :new, _params) do
+  #   socket
+  #   |> assign(:page_title, "New Feed")
+  #   |> assign(:feed, %Feed{})
+  # end
 
+  @impl true
   def handle_event("refresh_feed", _, socket) do
     {:ok, _} = Newsbloat.RSS.fetch_feed_items(socket.assigns.feed)
 

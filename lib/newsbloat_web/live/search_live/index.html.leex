@@ -12,7 +12,7 @@
 
   <div>
     <%= for item <- @results do %>
-      <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id), class: "block mb-1" %>
+      <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id), class: "block mb-4" %>
     <% end %>
     
   </div>

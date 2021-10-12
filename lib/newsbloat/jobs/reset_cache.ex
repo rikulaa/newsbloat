@@ -17,8 +17,6 @@ defmodule Newsbloat.Jobs.ResetCache do
 
   @impl true
   def handle_info(:work, state) do
-    # Do the desired work here
-    # ...
     IO.puts("Clearing cache...")
     Cache.reset()
     # Reschedule once more

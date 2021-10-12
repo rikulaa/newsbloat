@@ -17,7 +17,10 @@ defmodule Newsbloat.Application do
       NewsbloatWeb.Endpoint,
       # Start a worker by calling: Newsbloat.Worker.start_link(arg)
       # {Newsbloat.Worker, arg}
-      {Newsbloat.Jobs.FetchNewFeedItems, name: NewsbloatWeb.Jobs.FetchNewFeedItems}
+      {Newsbloat.Jobs.FetchNewFeedItems, name: NewsbloatWeb.Jobs.FetchNewFeedItems},
+      {Newsbloat.Jobs.ResetCache, name: Newsbloat.Jobs.ResetCache},
+      # Cache
+      {Newsbloat.Cache, name: Newsbloat.Cache}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

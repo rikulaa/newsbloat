@@ -22,3 +22,11 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 ## TODO
 
 - [ ] Styling
+
+Generic color variables (css-variables)
+Should support premade themes
+
+
+
+- [ ] bookmarks
+

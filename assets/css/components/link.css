@@ -1,0 +1,49 @@
+.link, .external {
+  @apply transition-all outline-none;
+  &:hover {
+    @apply transition-all;
+    background-size: 100% 2px;
+  }
+  &:focus {
+    @apply outline-none shadow-outline-primary
+  }
+  background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
+  /* 0px => no 'text underline' */
+  background-size: 100% 0px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+}
+
+.link-icon {
+  @apply outline-none;
+
+  &:focus {
+    @apply outline-none shadow-outline-primary
+  }
+  > svg {
+    @apply px-1 inline text-background bg-primary rounded-full transition-all;
+  }
+
+  &:hover > svg {
+    @apply text-primary bg-background;
+  }
+
+}
+
+/* same as link but without animation */
+.skip-to-content-link {
+    @apply p-2 inline-block;
+    &:hover {
+        @apply text-background transition-all;
+        background-size: 100% 100%;
+    }
+    transform: scaleY(0);
+    &:focus {
+        @apply outline-none shadow-outline-primary;
+        transform: scaleY(1);
+    }
+    background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
+    background-size: 100% 1px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+}

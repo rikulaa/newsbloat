@@ -103,6 +103,25 @@ defmodule NewsbloatWeb do
       import NewsbloatWeb.ErrorHelpers
       import NewsbloatWeb.Gettext
       alias NewsbloatWeb.Router.Helpers, as: Routes
+
+      def current_ui_theme(%Plug.Conn{} = conn) do
+        Plug.Conn.get_session(conn, :ui_theme)
+      end
+
+      def icon_tag(conn, name, opts \\ []) do
+        classes = Keyword.get(opts, :class, "") <> " icon"
+        svg_starting_tag_with_classes = "<svg class='" <> classes <> "'"
+
+        # TODO: cache these
+        svg_tag = File.read!("priv/static/icons/" <> name <>".svg")
+                  # Yeah, not the most safe solution to manipulate html with regex...
+                  |> String.replace("<svg", svg_starting_tag_with_classes)
+                  |> raw()
+      end
+
+      def link_with_html(opts, do: content) do
+        link(content |> raw(), opts)
+      end
     end
   end
 

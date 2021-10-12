@@ -1,13 +1,73 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "components/link";
+
+@media (prefers-color-scheme: dark) {
+    --color-primary: #e3e4e9;
+    --color-secondary: #1b1b1b;
+    --color-ancillary: #AC9779;
+
+    --color-foreground: #adaeb3;
+    --color-background: #1b1b1b;
+    fill: currentColor;
+    .theme-light-hidden * {
+        display: none;
+    }
+}
+@media (prefers-color-scheme: light) {
+    --color-primary: #242424;
+    --color-secondary: #ffffff;
+    --color-ancillary: #b5b5b5;
+
+    --color-foreground: #242424;
+    --color-background: #ffffff;
+    fill: currentColor;
+    .theme-dark-hidden * {
+        display: none;
+    }
+}
+
+/* use dark theme by default so eye's won't be burned by accident */
+html.dark {
+    --color-primary: #e3e4e9;
+    --color-secondary: #1b1b1b;
+    --color-ancillary: #AC9779;
+    
+    --color-foreground: #adaeb3;
+    --color-background: #1b1b1b;
+    fill: currentColor;
+    .theme-light-hidden * {
+        display: none;
+    }
+}
+html.light {
+    --color-primary: #242424;
+    --color-secondary: #ffffff;
+    --color-ancillary: #b5b5b5;
+
+    --color-foreground: #242424;
+    --color-background: #ffffff;
+    fill: currentColor;
+    .theme-dark-hidden * {
+        display: none;
+    }
+}
+
+
 
 /* This file is for your main application css. */
 /* @import "./phoenix.css"; */
 
 @layer base {
+  ::selection {
+    @apply bg-ancillary;
+  }
   body {
-    @apply text-base;
+    @apply text-base text-foreground bg-background;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply leading-5;
   }
   h1 {
     @apply text-5xl mt-10 mb-12;
@@ -28,32 +88,46 @@
     @apply text-base mt-1 mb-4;
   }
   p {
-    @apply mb-4;
+    @apply mb-4 leading-7;
   }
   a {
-    @apply text-blue-500;
+    @apply text-foreground;
   }
 
-  a[target=_blank]:after {
-    content: "";
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-left: 4px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-external-link'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E%0A");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    display: inline-block;
-}
+  /* TODO: 'external link' icon */
+  a[target=_blank]:after {}
 
-  a, button {
-    @apply inline-block p-2 rounded;
+  a {
+    @apply inline-block;
+  }
+  button, .button {
+    @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none cursor-pointer bg-transparent leading-normal ;
+    &:hover {
+      @apply text-background transition-all;
+      background-size: 100% 100%;
+    }
+    &:focus {
+      @apply outline-none shadow-outline-foreground;
+    }
+    background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
+    background-size: 100% 0px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
   }
 
   input, textarea, fieldset, select {
     @apply block mb-2;
   }
+  input, textarea {
+    @apply w-full p-2 border-b border-foreground text-base bg-background outline-none transition-all shadow-none;
+    &:focus {
+      @apply outline-none border-ancillary 
+    }
+  }
 
+  img {
+    @apply mb-4;
+  }
 }
 
 .container {
@@ -63,13 +137,27 @@
     @apply px-8 !important;
   }
 }
-
-button, .button {
-  @apply text-black border border-black leading-normal bg-transparent m-0 cursor-pointer;
+.content {
+  /* https://baymard.com/blog/line-length-readability */
+  max-width: 45rem;
 }
 
-.active {
-  @apply bg-gray-100 text-gray-900;
+.icon {
+  fill: currentColor;
+}
+
+.tag {
+  @apply inline-block p-1 rounded border border-foreground text-xs mr-1 mb-1;
+}
+
+
+.active:not(:hover) {
+  @apply text-ancillary;
+  background-image: linear-gradient(to top,var(--color-ancillary),var(--color-ancillary));
+  /* 0px => no 'text underline' */
+  background-size: 100% 2px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
 }
 /* lists */
 
@@ -109,27 +197,24 @@ button, .button {
   height: 100%;
   overflow: auto;
   background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.6);
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
+  @apply bg-background border border-ancillary p-8 pb-16;
   margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
   width: 80%;
 }
 
 .phx-modal-close {
-  color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .phx-modal-close:hover,
 .phx-modal-close:focus {
-  color: black;
+  /* color: black; */
   text-decoration: none;
   cursor: pointer;
 }
@@ -166,7 +251,6 @@ button, .button {
   display: none;
 }
 .invalid-feedback {
+  @apply mb-4 block;
   color: #a94442;
-  display: block;
-  margin: -1rem 0 2rem;
 }

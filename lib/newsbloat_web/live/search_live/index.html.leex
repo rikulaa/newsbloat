@@ -1,19 +1,18 @@
-<%= live_component NewsbloatWeb.FeedLive.FeedListComponent %>
+<%= live_component NewsbloatWeb.SidebarMenuComponent, ui_theme: @ui_theme %>
 <section class="container mx-auto">
   <h2 class="flex">
     Search
   </h2>
-  <form phx-change="search">
+  <form phx-change="search" class="mb-8">
     <div class="inputs">
-      <input type="text" name="input" value="<%= @q %>" phx-debounce="300">
+      <input type="text" name="input" value="<%= @q %>" phx-debounce="300" autofocus>
     </div>
     <div class="loader">Ladataan...</div>
   </form>
 
   <div>
     <%= for item <- @results do %>
-        <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id) %>
-      
+      <%= live_redirect item.title, to: Routes.feed_show_item_path(@socket, :show, item.feed, item.id), class: "block mb-4" %>
     <% end %>
     
   </div>

@@ -7,14 +7,17 @@ defmodule NewsbloatWeb.FeedLive.Show do
   alias NewsbloatWeb.Router.Helpers, as: Routes
 
   @impl true
-  def mount(%{ "id" => id } = _params, _session, socket) do
+  def mount(%{ "id" => id } = _params, session, socket) do
+    IO.inspect ["session", session]
     {:ok, socket 
+    |> assign_defaults_from_session(session)
     |> initialize(id)
     }
   end
 
   @impl true
   def handle_params(%{"id" => _id} = params, _, %{ assigns: assigns } = socket) do
+    IO.inspect [ "assign", Map.keys(assigns), assigns[:ui_theme]]
     # TODO: id might change here in case we are using live_patch (instead of redirect)
     feed = RSS.get_feed!(assigns.id)
     item_id = params

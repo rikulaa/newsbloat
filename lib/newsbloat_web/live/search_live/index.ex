@@ -5,9 +5,10 @@ defmodule NewsbloatWeb.SearchLive.Index do
   alias Newsbloat.RSS.Feed
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(params, session, socket) do
     {:ok,
      socket
+     |> assign_defaults_from_session(session)
      |> assign(:q, params |> Map.get("q", ""))
      |> assign(:results, %{})}
   end

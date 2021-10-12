@@ -7,24 +7,27 @@
     return_to: Routes.feed_show_path(@socket, :show, @feed) %>
 <% end %>
 
-<%= live_component NewsbloatWeb.FeedLive.FeedListComponent, current_feed: @feed %>
-<section class="container mx-auto">
-  <h2> <%= @feed.title %></h2>
-  <div class="">
+<%= live_component NewsbloatWeb.SidebarMenuComponent, current_feed: @feed, ui_theme: @ui_theme %>
+
+<section class="container content mx-auto mt-8 lg:mt-16">
+  <h2 class="mb-8"> <%= @feed.title %></h2>
+  <div class="mb-8">
     <%= for t <- @feed.tags do %>
-      <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
+      <span class="tag"><%= t.title %></span>
     <% end %>
   </div>
 
-  <button phx-click="refresh_feed">Refresh</button>
-  <span><%= live_patch "Edit", to: Routes.feed_show_path(@socket, :edit, @feed), class: "button" %></span>
-  <button phx-click="mark_all_as_read">Mark all as read</button>
-  <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index) %></span>
+  <div class="mb-8 lg:mb-16">
+    <button class="mb-2 mr-2" phx-click="refresh_feed">Refresh</button>
+    <%= live_patch "Edit", to: Routes.feed_show_path(@socket, :edit, @feed), class: "button mb-2 mr-2" %>
+    <button class="mb-2 mr-2" phx-click="mark_all_as_read">Mark all as read</button>
+    <%# <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index), class: "link p-2" %1></span> %>
+  </div>
 
   <div id="items" phx-update="append">
     <%= for item <- @page.entries do %>
-      <div id="<%= item.id %>">
-        <h3 class="mb-2 flex">
+      <div id="<%= item.id %>" class="mb-12">
+        <h3 class="mb-2 relative">
           <%= if item.id == @item_id do %>
             <%= live_patch item.title, to: Routes.feed_show_path(@socket, :show, @feed) %>
           <% else %>
@@ -32,27 +35,29 @@
           <% end %>
 
           <%= if not item.is_read do %>
-            (!)
+            <%= icon_tag(@socket, "control-record", class: "absolute -left-8 top-2 w-4 h-4") %>
           <% end %>
         </h3>
 
         <%= if item.id == @item_id do %>
-          <div class="">
-            <%= for t <- item.tags do %>
-              <span class="inline-block p-1 rounded border text-xs mr-1 mb-1"><%= t.title %></span>
-            <% end %>
-          </div>
-          <%= if item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
-            <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= item.id %>">Remove from favourites</button>
-          <% else %>
-            <button phx-click="mark_as_favoured" phx-value-item_id="<%= item.id %>">Add to favourites</button>
-          <% end %>
           <p>
           [<%= render_component "external_link.html", text: "Link", href: item.link %>]
           </p>
           <div>
             <p><%= item.safe_description |> raw %></p>
             <p><%= item.safe_content |> raw %></p>
+          </div>
+          <div class="mb-4">
+            <%= for t <- item.tags do %>
+              <span class="tag"><%= t.title %></span>
+            <% end %>
+          </div>
+          <div class="mb-8">
+            <%= if item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
+              <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= item.id %>">Remove from favourites</button>
+            <% else %>
+              <button phx-click="mark_as_favoured" phx-value-item_id="<%= item.id %>">Add to favourites</button>
+            <% end %>
           </div>
         <% end %>
       </div>

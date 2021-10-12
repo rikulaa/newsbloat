@@ -10,6 +10,7 @@ defmodule NewsbloatWeb.Plugs.ReturnToQueryParamToAssigns do
 
   def call(conn, default) do
     IO.puts("PLUG MIDDLEWARE")
+
     assign(conn, :return_to, nil)
     |> put_session(:return_to, nil)
   end

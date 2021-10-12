@@ -8,5 +8,4 @@ defmodule NewsbloatWeb.Plugs.Redirecter do
   def call(%Plug.Conn{} = conn, opts) do
     Controller.redirect(conn, opts)
   end
-
 end

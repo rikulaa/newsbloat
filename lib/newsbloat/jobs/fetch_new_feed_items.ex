@@ -29,5 +29,4 @@ defmodule Newsbloat.Jobs.FetchNewFeedItems do
   defp schedule_work do
     Process.send_after(self(), :work, :timer.hours(1))
   end
-
 end

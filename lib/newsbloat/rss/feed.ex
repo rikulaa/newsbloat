@@ -10,8 +10,7 @@ defmodule Newsbloat.RSS.Feed do
     field :url, :string
     field :title, :string
     has_many :items, Item
-    many_to_many :tags, Tag,
-      join_through: "feed_tags"
+    many_to_many :tags, Tag, join_through: "feed_tags"
 
     timestamps()
   end

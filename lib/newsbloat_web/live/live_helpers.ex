@@ -29,6 +29,7 @@ defmodule NewsbloatWeb.LiveHelpers do
     socket =
       socket
       |> assign_new(:ui_theme, fn -> Map.get(session, "ui_theme") end)
+
     socket
   end
 end

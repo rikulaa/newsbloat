@@ -4,16 +4,17 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
   alias Newsbloat.RSS
 
   @impl true
-  def mount(%{ "id" => id, "item_id" => item_id } = _params, session, socket) do
-    {:ok, socket 
-    |> assign_defaults_from_session(session)
-    |> initialize(id, item_id)
-    }
+  def mount(%{"id" => id, "item_id" => item_id} = _params, session, socket) do
+    {:ok,
+     socket
+     |> assign_defaults_from_session(session)
+     |> initialize(id, item_id)}
   end
 
   defp initialize(socket, id, item_id) do
     feed = RSS.get_feed!(id)
     item = RSS.get_feed_item(feed, item_id)
+
     socket
     |> assign(:id, id)
     |> assign(:feed, feed)
@@ -22,13 +23,22 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
   end
 
   # Add to favourites/remove from favourites
-  def handle_event("mark_as_favoured", %{ "item_id" => item_id } = _params, %{ assigns: assigns } = socket) do
+  def handle_event(
+        "mark_as_favoured",
+        %{"item_id" => item_id} = _params,
+        %{assigns: assigns} = socket
+      ) do
     item = RSS.get_feed_item(assigns.feed, String.to_integer(item_id))
-    {:ok, updated_item } = RSS.mark_item_as_favoured(item)
+    {:ok, updated_item} = RSS.mark_item_as_favoured(item)
     socket = update_item_in_place_in_socket(socket, updated_item)
     {:noreply, socket}
   end
-  def handle_event("mark_as_non_favoured", %{ "item_id" => item_id } = _params, %{ assigns: assigns } = socket) do
+
+  def handle_event(
+        "mark_as_non_favoured",
+        %{"item_id" => item_id} = _params,
+        %{assigns: assigns} = socket
+      ) do
     item = RSS.get_feed_item(assigns.feed, String.to_integer(item_id))
     {:ok, updated_item} = RSS.mark_item_as_non_favoured(item)
     socket = update_item_in_place_in_socket(socket, updated_item)
@@ -40,7 +50,6 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
     socket
     |> assign(:item, item)
   end
-
 
   defp page_title(:show), do: "Show Item"
 end

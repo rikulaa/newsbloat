@@ -10,17 +10,18 @@ defmodule Newsbloat.Cache do
     GenServer.start_link(@cache, :ok, opts)
   end
 
-  def ensure_fresh({_key, value, %{ timestamp: timestamp, ttl: ttl }}) do
+  def ensure_fresh({_key, value, %{timestamp: timestamp, ttl: ttl}}) do
     cond do
       abs(DateTime.diff(timestamp, DateTime.utc_now())) < ttl ->
         {:ok, value}
-      true -> 
+
+      true ->
         {:error, []}
     end
   end
 
   def get(key) do
-   # 2. Lookup is now done directly in ETS, without accessing the server
+    # 2. Lookup is now done directly in ETS, without accessing the server
     case :ets.lookup(@cache, key) do
       [row] -> ensure_fresh(row)
       [] -> {:error, []}
@@ -32,7 +33,7 @@ defmodule Newsbloat.Cache do
   TTL is in seconds.
   """
   def insert(key, value, ttl \\ 60) do
-    GenServer.cast(@cache, {:insert, key, value, %{ timestamp: DateTime.utc_now(), ttl: ttl }})
+    GenServer.cast(@cache, {:insert, key, value, %{timestamp: DateTime.utc_now(), ttl: ttl}})
   end
 
   @doc """
@@ -45,7 +46,7 @@ defmodule Newsbloat.Cache do
   ## Defining GenServer Callbacks
   @impl true
   def init(:ok) do
-     ets_table = :ets.new(@cache, [:named_table, read_concurrency: true])
+    ets_table = :ets.new(@cache, [:named_table, read_concurrency: true])
     {:ok, ets_table}
   end
 
@@ -59,11 +60,11 @@ defmodule Newsbloat.Cache do
     :ets.insert(ets_table, {key, value, ttl})
     {:noreply, ets_table}
   end
+
   @impl true
 
   def handle_cast({:reset}, ets_table) do
     :ets.delete_all_objects(ets_table)
     {:noreply, ets_table}
   end
-
 end

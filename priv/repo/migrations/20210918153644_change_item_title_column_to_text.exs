@@ -4,8 +4,6 @@ defmodule Newsbloat.Repo.Migrations.ChangeItemTitleColumnToText do
   def change do
     alter table(:items) do
       modify :title, :text
-
     end
-
   end
 end

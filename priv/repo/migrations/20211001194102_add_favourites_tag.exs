@@ -11,7 +11,8 @@ defmodule Newsbloat.Repo.Migrations.AddFavouritesTag do
   end
 
   def down do
-    tag = Repo.one(from t in Tag, where: t.title == "Favourite")
+    tag = Repo.one(from(t in Tag, where: t.title == "Favourite"))
+
     tag
     |> Repo.delete()
   end

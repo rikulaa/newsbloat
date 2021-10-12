@@ -15,7 +15,7 @@ defmodule Newsbloat.Repo.Migrations.CreateTags do
     create table("feed_tags", primary_key: false) do
       add :feed_id, references(:feeds)
       add :tag_id, references(:tags)
-    # timestamps()
+      # timestamps()
     end
 
     # Primary key and timestamps are not required if

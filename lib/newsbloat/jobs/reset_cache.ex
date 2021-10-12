@@ -27,5 +27,4 @@ defmodule Newsbloat.Jobs.ResetCache do
   defp schedule_work do
     Process.send_after(self(), :work, :timer.hours(24))
   end
-
 end

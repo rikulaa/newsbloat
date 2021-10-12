@@ -9,6 +9,5 @@ defmodule Newsbloat.Repo.Migrations.CreateFeeds do
 
       timestamps()
     end
-
   end
 end

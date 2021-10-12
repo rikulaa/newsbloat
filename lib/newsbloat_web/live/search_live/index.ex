@@ -16,12 +16,18 @@ defmodule NewsbloatWeb.SearchLive.Index do
   def handle_params(params, _, %{assigns: assigns} = socket) do
     # Get 'q' param, fetch results with that
     q = params |> Map.get("q", "")
-    results = if String.length(q) > 0 do RSS.search_items(q) else [] end
 
-    {:noreply, socket
-    |> assign(:results, results)
-    |> assign(:q, q)
-    }
+    results =
+      if String.length(q) > 0 do
+        RSS.search_items(q)
+      else
+        []
+      end
+
+    {:noreply,
+     socket
+     |> assign(:results, results)
+     |> assign(:q, q)}
   end
 
   @impl true

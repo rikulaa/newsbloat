@@ -13,9 +13,11 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
   end
 
   defp merge_parent_assigns(socket, assigns) do
-    merged_socket = Enum.reduce(assigns, socket, fn ({key, val}, updated_socket) ->
-      updated_socket |> assign(key, val)
-    end)
+    merged_socket =
+      Enum.reduce(assigns, socket, fn {key, val}, updated_socket ->
+        updated_socket |> assign(key, val)
+      end)
+
     merged_socket
   end
 

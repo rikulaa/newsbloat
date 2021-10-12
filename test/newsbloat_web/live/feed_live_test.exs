@@ -6,7 +6,11 @@ defmodule NewsbloatWeb.FeedLiveTest do
   alias Newsbloat.RSS
 
   @create_attrs %{description: "some description", url: "some url", title: "some title"}
-  @update_attrs %{description: "some updated description", url: "some updated url", title: "some updated title"}
+  @update_attrs %{
+    description: "some updated description",
+    url: "some updated url",
+    title: "some updated title"
+  }
   @invalid_attrs %{description: nil, url: nil, title: nil}
 
   defp fixture(:feed) do

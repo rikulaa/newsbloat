@@ -257,6 +257,14 @@ defmodule Newsbloat.RSS do
     |> Ecto.Changeset.put_assoc(:tags, updated_tags_for_feed)
     |> Repo.update()
 
+    # At least attempt to parse the provided date
+    get_parsed_date_or_today = fn (parsing_fn) ->
+      case parsing_fn.() do
+        {:ok, date} -> date
+        _ -> DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_naive()
+      end
+    end
+
 
     # TODO: More robust checks and parsing for atom/rss items
     rss_items = parsed_body
@@ -272,9 +280,7 @@ defmodule Newsbloat.RSS do
 
                     %Item{} 
                     |> Item.changeset(%{
-                    # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
-                    # TODO: fix the date parsing
-                      published_at: now, 
+                      published_at: get_parsed_date_or_today.(fn -> Timex.parse(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}") end),
                       guid: get_value_from_map_list_by_key(value, :guid),
                       title: get_value_from_map_list_by_key(value, :title),
                       link: get_value_from_map_list_by_key(value, :link),
@@ -298,9 +304,7 @@ defmodule Newsbloat.RSS do
 
                      %Item{} 
                      |> Item.changeset(%{
-                      # published_at: Timex.parse!(get_value_from_map_list_by_key(value, :pubDate), "{RFC822z}"),
-                      # TODO: fix the date parsing
-                       published_at: now, 
+                       published_at: get_parsed_date_or_today.(fn -> Timex.parse(get_value_from_map_list_by_key(value, :published), "{ISO:Extended}") end),
                        guid: get_value_from_map_list_by_key(value, :id),
                        title: get_value_from_map_list_by_key(value, :title),
                        link: get_attr_value_from_map_list_by_key(value, :link, :href),

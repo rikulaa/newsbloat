@@ -25,7 +25,7 @@ secret_key_base =
 
 config :newsbloat, NewsbloatWeb.Endpoint,
   http: [
-    host: System.get_env("HOST", "example.com")
+    host: System.get_env("HOST", "example.com"),
     port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
   ],

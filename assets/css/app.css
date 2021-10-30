@@ -132,7 +132,7 @@ html.light {
 
 .container {
   max-width: 60rem;
-  @apply px-4 !important;
+  @apply px-12 !important;
   @screen md {
     @apply px-8 !important;
   }

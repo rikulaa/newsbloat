@@ -59,7 +59,7 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
       x-bind:class="isOpen ? 'bg-background shadow-lg w-screen lg:w-64 h-screen overflow-y-auto pb-16' : 'bg-transparent w-0'"
       class="fixed top-0 p-4 z-10"
     >
-    <button class="fixed lg:relative bottom-0 right-0 m-4 lg:m-0 bg-background group" @click="isOpen = ! isOpen">
+    <button class="fixed lg:relative bottom-0 right-0 m-4 lg:m-0 bg-background group z-10" @click="isOpen = ! isOpen">
       <%= icon_tag(@socket, "menu", class: "w-4 h-4 transform transition-transform group-hover:rotate-90") %>
     </button>
       <div x-show="isOpen">

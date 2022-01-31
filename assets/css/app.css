@@ -116,7 +116,7 @@ html.light {
   }
 
   input, textarea, fieldset, select {
-    @apply block mb-2;
+    @apply block mb-4;
   }
   input, textarea {
     @apply w-full p-2 border-b border-foreground text-base bg-background outline-none transition-all shadow-none;

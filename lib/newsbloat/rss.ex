@@ -236,10 +236,15 @@ defmodule Newsbloat.RSS do
   end
 
   def fetch_feed_body_by_url(url) do
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(String.trim(url))
+    case HTTPoison.get(String.trim(url)) do
+      {:ok, %HTTPoison.Response{body: body}} ->
+        body
+        |> Quinn.parse()
 
-    body
-    |> Quinn.parse()
+      # If there is error just return empty array
+      {:error, _} ->
+        []
+    end
   end
 
   def maybe_populate_feed_title_and_description(%{} = feed) do

@@ -20,5 +20,22 @@ defmodule Newsbloat.RSS.Feed do
     feed
     |> cast(attrs, [:title, :url, :description])
     |> validate_required([:title, :url])
+    |> validate_url(:url)
+  end
+
+  @doc """
+  Validates a change has the proper url format
+
+  ## Examples
+
+      validate_url(changeset, :email)
+
+  """
+  # @spec validate_url(t, atom, Keyword.t()) :: t
+  def validate_url(changeset, field) do
+    validate_change(changeset, field, fn
+      _, value ->
+        if !is_nil(URI.parse(value).host), do: [], else: [{field, "Invalid URL"}]
+    end)
   end
 end

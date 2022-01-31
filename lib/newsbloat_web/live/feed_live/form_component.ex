@@ -22,7 +22,10 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
           is_nil(s) or String.length(s) == 0
         end)
 
-    if not socket.assigns.tried_to_populate and has_only_url do
+    # TODO: should validate this via changesets?
+    is_valid_url = !is_nil(URI.parse(feed_params["url"]).host)
+
+    if not socket.assigns.tried_to_populate and has_only_url and is_valid_url do
       maybe_populated_feed =
         RSS.maybe_populate_feed_title_and_description(%{} |> Map.put(:url, feed_params["url"]))
 

@@ -10,9 +10,6 @@
   <%= text_input f, :url %>
   <%= error_tag f, :url %>
 
-  <div class="block">
-    <div class="loader mb-4">Loading...</div>
-  </div>
   <%= if @tried_to_populate do %>
     <%= label f, :title %>
     <%= text_input f, :title %>

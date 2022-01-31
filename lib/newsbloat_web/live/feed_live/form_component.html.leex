@@ -6,17 +6,22 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
-
   <%= label f, :url %>
   <%= text_input f, :url %>
   <%= error_tag f, :url %>
 
-  <%= label f, :description %>
-  <%= textarea f, :description %>
-  <%= error_tag f, :description %>
+  <div class="block">
+    <div class="loader mb-4">Loading...</div>
+  </div>
+  <%= if @tried_to_populate do %>
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= label f, :description %>
+    <%= textarea f, :description %>
+    <%= error_tag f, :description %>
+  <% end %>
 
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

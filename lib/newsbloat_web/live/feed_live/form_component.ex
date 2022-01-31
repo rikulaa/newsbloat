@@ -10,17 +10,39 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:tried_to_populate, false)}
   end
 
   @impl true
   def handle_event("validate", %{"feed" => feed_params}, socket) do
-    changeset =
-      socket.assigns.feed
-      |> RSS.change_feed(feed_params)
-      |> Map.put(:action, :validate)
+    has_only_url =
+      String.length(feed_params["url"]) > 0 and
+        Enum.all?([feed_params["title"], feed_params["description"]], fn s ->
+          is_nil(s) or String.length(s) == 0
+        end)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    if not socket.assigns.tried_to_populate and has_only_url do
+      maybe_populated_feed =
+        RSS.maybe_populate_feed_title_and_description(%{} |> Map.put(:url, feed_params["url"]))
+
+      changeset =
+        socket.assigns.feed
+        |> RSS.change_feed(maybe_populated_feed)
+        |> Map.put(:action, :validate)
+
+      {:noreply,
+       socket
+       |> assign(:changeset, changeset)
+       |> assign(:tried_to_populate, true)}
+    else
+      changeset =
+        socket.assigns.feed
+        |> RSS.change_feed(feed_params)
+        |> Map.put(:action, :validate)
+
+      {:noreply, assign(socket, :changeset, changeset)}
+    end
   end
 
   def handle_event("save", %{"feed" => feed_params}, socket) do

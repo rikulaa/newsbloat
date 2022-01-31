@@ -235,13 +235,38 @@ defmodule Newsbloat.RSS do
     end
   end
 
-  def fetch_feed_items(%Feed{} = feed) do
-    IO.puts(feed.title)
-    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(feed.url)
+  def fetch_feed_body_by_url(url) do
+    {:ok, %HTTPoison.Response{body: body}} = HTTPoison.get(String.trim(url))
 
-    parsed_body =
-      body
-      |> Quinn.parse()
+    body
+    |> Quinn.parse()
+  end
+
+  def maybe_populate_feed_title_and_description(%{} = feed) do
+    body = fetch_feed_body_by_url(feed.url)
+
+    is_rss = body |> Quinn.find(:rss) |> length() > 0
+
+    if is_rss do
+      # rss feed
+      rss_title = body |> Quinn.find(:title) |> List.first() |> Map.get(:value) |> List.first()
+
+      rss_description =
+        body |> Quinn.find(:description) |> List.first() |> Map.get(:value) |> List.first()
+
+      feed |> Map.put(:title, rss_title) |> Map.put(:description, rss_description)
+    else
+      atom_title = body |> Quinn.find(:title) |> List.first() |> Map.get(:value) |> List.first()
+
+      atom_description =
+        body |> Quinn.find(:subtitle) |> List.first(%{}) |> Map.get(:value, [""]) |> List.first()
+
+      feed |> Map.put(:title, atom_title) |> Map.put(:description, atom_description)
+    end
+  end
+
+  def fetch_feed_items(%Feed{} = feed) do
+    parsed_body = fetch_feed_body_by_url(feed.url)
 
     now = DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_naive()
 

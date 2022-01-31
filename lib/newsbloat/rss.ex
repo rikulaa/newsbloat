@@ -51,23 +51,28 @@ defmodule Newsbloat.RSS do
 
   ## Examples
 
-      iex> create_feed(%{field: value})
-      {:ok, %Feed{}}
+  iex> create_feed(%{field: value})
+  {:ok, %Feed{}}
 
-      iex> create_feed(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> create_feed(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def create_feed(attrs \\ %{}) do
-    {:ok, feed} =
+    case(
       %Feed{}
       |> Feed.changeset(attrs)
       |> Repo.insert()
+    ) do
+      {:ok, feed} ->
+        {:ok, items} = fetch_feed_items(feed)
+        IO.puts("SHOULD HAVE FETCHTED")
+        IO.puts(Enum.count(items))
+        {:ok, feed}
 
-    {:ok, items} = fetch_feed_items(feed)
-    IO.puts("SHOULD HAVE FETCHTED")
-    IO.puts(Enum.count(items))
-    {:ok, feed}
+      err ->
+        err
+    end
   end
 
   @doc """

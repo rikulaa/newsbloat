@@ -195,19 +195,29 @@ defmodule Newsbloat.RSS do
   end
 
   def get_feed_item(%Feed{} = feed, item_id) do
-    query =
-      from(
-        item in Item,
-        where: item.feed_id == ^feed.id and item.id == ^item_id,
-        order_by: [desc: item.id],
-        preload: [:tags]
-      )
+    cache_id = "feed_item:" <> to_string(feed.id) <> to_string(item_id)
 
-    item =
-      Repo.one(query)
-      |> Item.with_safe_content_and_desc()
+    case Cache.get(cache_id) do
+      {:error, _} ->
+        query =
+          from(
+            item in Item,
+            where: item.feed_id == ^feed.id and item.id == ^item_id,
+            order_by: [desc: item.id],
+            preload: [:tags]
+          )
 
-    item
+        item =
+          Repo.one(query)
+          |> Item.with_safe_content_and_desc()
+
+        # Cache results
+        Cache.insert(cache_id, item, 60 * 60)
+        item
+
+      {:ok, res} ->
+        res
+    end
   end
 
   def list_feed_items(%Feed{} = feed, page, opts \\ []) do

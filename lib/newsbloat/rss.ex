@@ -12,6 +12,48 @@ defmodule Newsbloat.RSS do
   alias Newsbloat.RSS.Item
   alias Newsbloat.RSS.Tag
 
+  def build_query(queryable, opts \\ []) do
+    # TODO: automatic query builder from keys (or maybe explicitely define them in item.ex)
+    # keys =
+    #   struct(queryable)
+    #   |> Map.keys()
+    #   |> Enum.map(fn k -> to_string(k) end)
+    #   |> Enum.filter(fn key -> !String.starts_with?(key, "__") end)
+    keys = queryable.filterable_keys
+    # Pick only keys which are allowed
+    allowed_opts = opts |> Enum.filter(fn {k, _} -> Enum.member?(keys, k) end)
+
+    parse_actual_value = fn s -> String.replace(s, "lk__", "") end
+
+    Enum.reduce(allowed_opts, queryable, fn
+      {:order_by, "asc__" <> value}, query ->
+        actual_value = parse_actual_value.(value) |> String.to_existing_atom()
+        order_by(query, [q], asc: field(q, ^actual_value))
+
+      {:order_by, "desc__" <> value}, query ->
+        actual_value = parse_actual_value.(value) |> String.to_existing_atom()
+        order_by(query, [q], desc: field(q, ^actual_value))
+
+      # ilike
+      {k, "lk__" <> value}, query ->
+        v = value |> String.replace("lk__", "")
+        actual_value = "%" <> v <> "%"
+        where(query, [q], ilike(field(q, ^k), ^actual_value))
+
+      # less than
+      {k, "lt__" <> value}, query ->
+        where(query, [q], field(q, ^k) < ^parse_actual_value.(value))
+
+      # Greater than
+      {k, "gt__" <> value}, query ->
+        where(query, [q], field(q, ^k) > ^parse_actual_value.(value))
+
+      # Equals
+      {k, value}, query ->
+        where(query, ^[{k, value}])
+    end)
+  end
+
   @doc """
   Returns the list of feeds.
 
@@ -168,10 +210,10 @@ defmodule Newsbloat.RSS do
     item
   end
 
-  def list_feed_items(%Feed{} = feed, page) do
+  def list_feed_items(%Feed{} = feed, page, opts \\ []) do
     query =
       from(
-        item in Item,
+        item in build_query(Item, opts),
         where: item.feed_id == ^feed.id,
         order_by: [desc: item.id],
         preload: [:tags]

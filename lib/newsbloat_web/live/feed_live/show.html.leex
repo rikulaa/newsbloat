@@ -24,6 +24,9 @@
     <%# <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index), class: "link p-2" %1></span> %>
   </div>
 
+  <%= if length(@page.entries) == 0 do %>
+    <span><%= live_redirect "No more entries! Show older ones?", to: Routes.feed_show_path(@socket, :show, @feed, is_read: true) %></span>
+  <% end %>
   <div id="items" phx-update="append">
     <%= for item <- @page.entries do %>
       <div id="<%= item.id %>" class="mb-12">

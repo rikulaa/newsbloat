@@ -7,6 +7,10 @@ defmodule Newsbloat.RSS.Item do
   alias Newsbloat.RSS.Tag
   alias HtmlSanitizeEx
 
+  # These can be used for filtering
+  @filterable_keys [:order_by, :is_read, :title, :content, :inserted_at]
+  def filterable_keys, do: @filterable_keys
+
   schema "items" do
     field :content, :string
     field :safe_content, :string, virtual: true

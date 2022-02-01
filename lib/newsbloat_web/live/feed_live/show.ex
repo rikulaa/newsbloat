@@ -6,13 +6,16 @@ defmodule NewsbloatWeb.FeedLive.Show do
   alias NewsbloatWeb.Router.Helpers, as: Routes
 
   @impl true
-  def mount(%{"id" => id} = _params, session, socket) do
-    IO.inspect(["session", session])
+  def mount(%{"id" => id} = params, session, socket) do
+    {_, opts_map} = params |> Map.pop("id")
+
+    default_opts =
+      opts_map |> Map.update("is_read", false, fn prev_val -> prev_val end) |> Map.to_list()
 
     {:ok,
      socket
      |> assign_defaults_from_session(session)
-     |> initialize(id)}
+     |> initialize(id, default_opts)}
   end
 
   @impl true
@@ -20,6 +23,7 @@ defmodule NewsbloatWeb.FeedLive.Show do
     IO.inspect(["assign", Map.keys(assigns), assigns[:ui_theme]])
     # TODO: id might change here in case we are using live_patch (instead of redirect)
     feed = RSS.get_feed!(assigns.id)
+    show_is_read = params |> Map.get("is_read", false) == true
 
     item_id =
       params
@@ -49,17 +53,19 @@ defmodule NewsbloatWeb.FeedLive.Show do
     end
   end
 
-  defp initialize(%{assigns: _assigns} = socket, id) do
+  defp initialize(%{assigns: _assigns} = socket, id, opts \\ []) do
     feed = RSS.get_feed!(id)
+
+    kw_opts = Enum.map(opts, fn {key, value} -> {String.to_existing_atom(key), value} end)
 
     socket
     |> assign(:id, id)
     |> assign(:feed, feed)
-    |> assign(:page, fetch_page_by_number(feed, 1))
+    |> assign(:page, fetch_page_by_number(feed, 1, kw_opts))
   end
 
-  defp fetch_page_by_number(feed, page) do
-    RSS.list_feed_items(feed, page)
+  defp fetch_page_by_number(feed, page, opts \\ []) do
+    RSS.list_feed_items(feed, page, opts)
   end
 
   # defp apply_action(socket, :new, _params) do

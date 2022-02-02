@@ -10,7 +10,7 @@
   <%= text_input f, :url %>
   <%= error_tag f, :url %>
 
-  <%= if @tried_to_populate do %>
+  <%= if @tried_to_populate or Map.has_key?(@feed, :id) do %>
     <%= label f, :title %>
     <%= text_input f, :title %>
     <%= error_tag f, :title %>
@@ -20,5 +20,10 @@
     <%= error_tag f, :description %>
   <% end %>
 
-  <%= submit "Save", phx_disable_with: "Saving..." %>
+  <div class="flex justify-between">
+    <%= if Map.has_key?(@feed, :id) do %>
+      <%= link "Delete", to: "#", phx_click: "delete", phx_target: @myself, phx_value_id: @feed.id, data: [confirm: "Are you sure?"] %>
+    <% end %>
+    <%= submit "Save", phx_disable_with: "Saving...", class: "mr-0 ml-auto" %>
+  </div>
 </form>

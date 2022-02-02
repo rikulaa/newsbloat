@@ -52,6 +52,18 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
     save_feed(socket, socket.assigns.action, feed_params)
   end
 
+  def handle_event("delete", %{"id" => id}, socket) do
+    feed = RSS.get_feed!(id)
+    {:ok, _} = RSS.delete_feed(feed)
+
+    {
+      :noreply,
+      socket
+      |> put_flash(:info, "Feed deleted")
+      |> push_redirect(to: Routes.feed_index_path(socket, :index))
+    }
+  end
+
   defp save_feed(socket, :edit, feed_params) do
     case RSS.update_feed(socket.assigns.feed, feed_params) do
       {:ok, _feed} ->

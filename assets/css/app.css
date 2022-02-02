@@ -128,6 +128,12 @@ html.light {
   img {
     @apply mb-4;
   }
+  
+  table tbody {
+  }
+  table th, table td {
+    @apply p-2;
+  }
 }
 
 .container {

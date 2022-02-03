@@ -171,6 +171,12 @@ html.light {
 .loader {
   @apply hidden
 }
+.loader.loading {
+  @apply inline-block animate-pulse;
+}
+.loading-animation {
+  @apply animate-pulse;
+}
 .phx-change-loading .loader {
   @apply inline-block;
 }

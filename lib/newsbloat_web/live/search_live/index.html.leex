@@ -7,7 +7,7 @@
     <div class="inputs">
       <input type="text" name="input" value="<%= @q %>" phx-debounce="300" autofocus>
     </div>
-    <button <%= if @is_loading do %> disabled <% end %> type="submit">
+    <button <%= if @is_loading do %> disabled class="loading-animation" <% end %> type="submit">
       <%= if @is_loading do %>
         Loading...
       <% else %>

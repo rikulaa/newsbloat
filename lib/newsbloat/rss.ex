@@ -269,7 +269,7 @@ defmodule Newsbloat.RSS do
     "
 
     ts_query_string =
-      Regex.scan(~r/[[:alnum:]]+/, q)
+      Regex.scan(~r/[a-zA-Z0-9]+/, q)
       # 'fuzzy' search for every word
       |> Enum.map(fn [part] -> part <> ":*" end)
       |> Enum.join(" & ")

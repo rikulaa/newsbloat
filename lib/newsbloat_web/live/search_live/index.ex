@@ -34,7 +34,7 @@ defmodule NewsbloatWeb.SearchLive.Index do
 
   @impl true
   def handle_event("search", params, socket) do
-    search_string = params |> Map.get("input", "") |> String.replace(~r/\s/, "")
+    search_string = params |> Map.get("input", "")
 
     {:noreply,
      socket

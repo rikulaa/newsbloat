@@ -265,11 +265,19 @@ defmodule Newsbloat.RSS do
         GROUP BY items.id
       ) items_search
       WHERE items_search.document @@ to_tsquery($1)
+      LIMIT 50
     "
-    trimmed_query_string = Regex.replace(~r/\s/, q, "")
 
-    if String.length(trimmed_query_string) > 0 do
-      query_string = trimmed_query_string <> ":*"
+    ts_query_string =
+      Regex.scan(~r/[[:alnum:]]+/, q)
+      # 'fuzzy' search for every word
+      |> Enum.map(fn [part] -> part <> ":*" end)
+      |> Enum.join(" & ")
+
+    # ts_query_string = Regex.replace(~r/\s/, q, " & ")
+
+    if String.length(ts_query_string) > 0 do
+      query_string = ts_query_string
 
       case Cache.get(query_string) do
         {:error, _} ->

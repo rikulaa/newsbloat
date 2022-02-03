@@ -10,7 +10,8 @@ defmodule NewsbloatWeb.SearchLive.Index do
      socket
      |> assign_defaults_from_session(session)
      |> assign(:q, params |> Map.get("q", ""))
-     |> assign(:results, %{})}
+     |> assign(:results, %{})
+     |> assign(:is_loading, false)}
   end
 
   def handle_params(params, _, %{assigns: assigns} = socket) do
@@ -27,7 +28,8 @@ defmodule NewsbloatWeb.SearchLive.Index do
     {:noreply,
      socket
      |> assign(:results, results)
-     |> assign(:q, q)}
+     |> assign(:q, q)
+     |> assign(:is_loading, false)}
   end
 
   @impl true
@@ -35,6 +37,8 @@ defmodule NewsbloatWeb.SearchLive.Index do
     search_string = params |> Map.get("input", "") |> String.replace(~r/\s/, "")
 
     {:noreply,
-     push_patch(socket, to: Routes.search_index_path(socket, :index, %{"q" => search_string}))}
+     socket
+     |> assign(:is_loading, true)
+     |> push_patch(to: Routes.search_index_path(socket, :index, %{"q" => search_string}))}
   end
 end

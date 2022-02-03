@@ -3,11 +3,17 @@
   <h2 class="flex">
     Search
   </h2>
-  <form phx-change="search" class="mb-8">
+  <form phx-submit="search" class="mb-8">
     <div class="inputs">
       <input type="text" name="input" value="<%= @q %>" phx-debounce="300" autofocus>
     </div>
-    <div class="loader">Ladataan...</div>
+    <button <%= if @is_loading do %> disabled <% end %> type="submit">
+      <%= if @is_loading do %>
+        Loading...
+      <% else %>
+        Search
+      <% end %>
+    </button>
   </form>
 
   <div>

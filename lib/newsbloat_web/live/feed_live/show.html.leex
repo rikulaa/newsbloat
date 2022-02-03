@@ -43,24 +43,31 @@
         </h3>
 
         <%= if item.id == @item_id do %>
-          <p>
-          [<%= render_component "external_link.html", text: "Link", href: item.link %>]
-          </p>
-          <div>
-            <p><%= item.safe_description |> raw %></p>
-            <p><%= item.safe_content |> raw %></p>
-          </div>
-          <div class="mb-4">
-            <%= for t <- item.tags do %>
-              <span class="tag"><%= t.title %></span>
-            <% end %>
-          </div>
-          <div class="mb-8">
-            <%= if item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
-              <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= item.id %>">Remove from favourites</button>
-            <% else %>
-              <button phx-click="mark_as_favoured" phx-value-item_id="<%= item.id %>">Add to favourites</button>
-            <% end %>
+          <div class="">
+            <div class="fixed bottom-0">
+              <button role="button" class="z-50 link -ml-10 px-2 py-4 border-none">
+                <%= live_patch icon_tag(@socket, "arrow-circle-up", class: "w-4 h-4"), to: Routes.feed_show_path(@socket, :show, @feed)<>"#"<>to_string(item.id) %>
+              </button>
+            </div>
+            <p>
+            [<%= render_component "external_link.html", text: "Link", href: item.link %>]
+            </p>
+            <div>
+              <p><%= item.safe_description |> raw %></p>
+              <p><%= item.safe_content |> raw %></p>
+            </div>
+            <div class="mb-4">
+              <%= for t <- item.tags do %>
+                <span class="tag"><%= t.title %></span>
+              <% end %>
+            </div>
+            <div class="mb-8">
+              <%= if item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
+                <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= item.id %>">Remove from favourites</button>
+              <% else %>
+                <button phx-click="mark_as_favoured" phx-value-item_id="<%= item.id %>">Add to favourites</button>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>

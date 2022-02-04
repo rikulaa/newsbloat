@@ -4,6 +4,7 @@ defmodule NewsbloatWeb.Router do
   alias NewsbloatWeb.Plugs.ReturnToQueryParamToAssigns
   alias NewsbloatWeb.Plugs.UITheme
   import NewsbloatWeb.Plugs.BasicAuth, only: [auth: 2]
+  alias NewsbloatWeb.Plugs.PutLanguage
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -14,6 +15,7 @@ defmodule NewsbloatWeb.Router do
     plug :put_secure_browser_headers
     plug :auth
     plug UITheme
+    plug PutLanguage
   end
 
   pipeline :api do

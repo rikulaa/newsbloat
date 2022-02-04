@@ -29,6 +29,12 @@ defmodule NewsbloatWeb.LiveHelpers do
     socket =
       socket
       |> assign_new(:ui_theme, fn -> Map.get(session, "ui_theme") end)
+      |> assign_new(:current_lang, fn -> Map.get(session, "current_lang") end)
+
+    # Assign the current lang to liveview process as well
+    # https://hexdocs.pm/phoenix_live_view/using-gettext.html
+    current_lang = socket.assigns.current_lang
+    Gettext.put_locale(NewsbloatWeb.Gettext, current_lang)
 
     socket
   end

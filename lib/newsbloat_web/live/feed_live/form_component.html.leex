@@ -6,16 +6,16 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :url %>
+  <%= label f, NewsbloatWeb.Gettext.dgettext("feed", "url") %>
   <%= text_input f, :url %>
   <%= error_tag f, :url %>
 
   <%= if @tried_to_populate or !is_nil(Map.get(@feed, :id)) do %>
-    <%= label f, :title %>
+    <%= label f, NewsbloatWeb.Gettext.dgettext("feed", "title") %>
     <%= text_input f, :title %>
     <%= error_tag f, :title %>
 
-    <%= label f, :description %>
+    <%= label f, NewsbloatWeb.Gettext.dgettext("feed", "description") %>
     <%= textarea f, :description %>
     <%= error_tag f, :description %>
   <% end %>

@@ -57,7 +57,8 @@ msgid "Mark all as read"
 msgstr ""
 
 #, elixir-format
-#: lib/newsbloat_web/live/sidebar_menu_component.ex:75
+#: lib/newsbloat_web/live/feed_live/index.ex:29
+#: lib/newsbloat_web/live/feed_live/show.ex:146 lib/newsbloat_web/live/sidebar_menu_component.ex:75
 msgid "New Feed"
 msgstr ""
 
@@ -91,4 +92,40 @@ msgstr "Search"
 #, elixir-format
 #: lib/newsbloat_web/live/components/lang_selector_component.ex:13
 msgid "Language"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/index.ex:23
+#: lib/newsbloat_web/live/feed_live/show.ex:145
+msgid "Edit Feed"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.ex:87
+msgid "Feed created successfully"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.ex:64
+msgid "Feed deleted"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.ex:74
+msgid "Feed updated successfully"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/index.ex:35
+msgid "Listing Feeds"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show_item.ex:55
+msgid "Show Item"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.ex:144
+msgid "Show Feed"
 msgstr ""

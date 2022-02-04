@@ -141,7 +141,7 @@ defmodule NewsbloatWeb.FeedLive.Show do
     )
   end
 
-  defp page_title(:show), do: "Show Feed"
-  defp page_title(:edit), do: "Edit Feed"
-  defp page_title(:new), do: "New Feed"
+  defp page_title(:show), do: NewsbloatWeb.Gettext.gettext("Show Feed")
+  defp page_title(:edit), do: NewsbloatWeb.Gettext.gettext("Edit Feed")
+  defp page_title(:new), do: NewsbloatWeb.Gettext.gettext("New Feed")
 end

@@ -20,19 +20,19 @@ defmodule NewsbloatWeb.FeedLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Feed")
+    |> assign(:page_title, NewsbloatWeb.Gettext.gettext("Edit Feed"))
     |> assign(:feed, RSS.get_feed!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Feed")
+    |> assign(:page_title, NewsbloatWeb.Gettext.gettext("New Feed"))
     |> assign(:feed, %Feed{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Feeds")
+    |> assign(:page_title, NewsbloatWeb.Gettext.gettext("Listing Feeds"))
     |> assign(:feed, nil)
   end
 

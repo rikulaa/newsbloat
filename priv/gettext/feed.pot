@@ -1,0 +1,26 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new translations manually only if they're dynamic
+## translations that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here as no
+## effect: edit them in PO (.po) files instead.
+msgid ""
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:18
+msgid "description"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:14
+msgid "title"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:9
+msgid "url"
+msgstr ""

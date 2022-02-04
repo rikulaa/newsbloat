@@ -61,7 +61,7 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
     {
       :noreply,
       socket
-      |> put_flash(:info, "Feed deleted")
+      |> put_flash(:info, NewsbloatWeb.Gettext.gettext("Feed deleted"))
       |> push_redirect(to: Routes.feed_index_path(socket, :index))
     }
   end
@@ -71,7 +71,7 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
       {:ok, _feed} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Feed updated successfully")
+         |> put_flash(:info, NewsbloatWeb.Gettext.gettext("Feed updated successfully"))
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -84,7 +84,7 @@ defmodule NewsbloatWeb.FeedLive.FormComponent do
       {:ok, _feed} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Feed created successfully")
+         |> put_flash(:info, NewsbloatWeb.Gettext.gettext("Feed created successfully"))
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -23,6 +23,7 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
   end
 
   # Add to favourites/remove from favourites
+  @impl true
   def handle_event(
         "mark_as_favoured",
         %{"item_id" => item_id} = _params,
@@ -51,5 +52,5 @@ defmodule NewsbloatWeb.FeedLive.ShowItem do
     |> assign(:item, item)
   end
 
-  defp page_title(:show), do: "Show Item"
+  defp page_title(:show), do: NewsbloatWeb.Gettext.gettext("Show Item")
 end

@@ -11,6 +11,8 @@
 <%= live_component NewsbloatWeb.SidebarMenuComponent, ui_theme: @ui_theme %>
 
 <section class="container mx-auto">
-    <h1>Feeds</h1>
+  <h1>
+    <%= NewsbloatWeb.Gettext.ngettext("Feed", "Feeds", 2) %>
+  </h1>
     <%= live_component NewsbloatWeb.FeedListComponent, class: "w-auto" %>
 </section>

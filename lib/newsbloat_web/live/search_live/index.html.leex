@@ -1,7 +1,7 @@
 <%= live_component NewsbloatWeb.SidebarMenuComponent, ui_theme: @ui_theme %>
 <section class="container mx-auto">
   <h2 class="flex">
-    Search
+    <%= NewsbloatWeb.Gettext.gettext("search") %>
   </h2>
   <form phx-submit="search" class="mb-8">
     <div class="inputs">
@@ -9,9 +9,9 @@
     </div>
     <button <%= if @is_loading do %> disabled class="loading-animation" <% end %> type="submit">
       <%= if @is_loading do %>
-        Loading...
+        <%= NewsbloatWeb.Gettext.gettext("loading") %>...
       <% else %>
-        Search
+        <%= NewsbloatWeb.Gettext.gettext("search") %>
       <% end %>
     </button>
   </form>

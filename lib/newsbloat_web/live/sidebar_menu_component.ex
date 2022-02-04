@@ -65,27 +65,22 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
     </button>
       <div x-show="isOpen">
         <h3>
-          <%= link "Feeds", to: Routes.feed_index_path(@socket, :index) %>
+          <%= link NewsbloatWeb.Gettext.ngettext("Feed", "Feeds", 2), to: Routes.feed_index_path(@socket, :index) %>
         </h3>
 
         
         <%= live_component NewsbloatWeb.FeedListComponent, current_feed: @current_feed %>
         <ul class="mb-4">
           <li>
-            <%= live_patch "New Feed", to: Routes.feed_index_path(@socket, :new), class: "link p-2" %>
+            <%= live_patch NewsbloatWeb.Gettext.gettext("New Feed"), to: Routes.feed_index_path(@socket, :new), class: "link p-2" %>
           </li>
         </ul>
         <ul class="mb-4">
-          <li>
-              <a href="/" class="link p-2">
-                Home
-              </a>
-          </li>
           <li class="ml-auto mr-0">
           <li>
             <%= link_with_html to: Routes.search_index_path(@socket, :index), class: "link p-2" do
               {_, svg } = icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2")
-              Enum.join([svg, "Search"], " ")
+              Enum.join([svg, NewsbloatWeb.Gettext.gettext("Search")], " ")
             end %>
           </li>
           </li>
@@ -94,10 +89,11 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
           <li>
           <%= link_with_html to: Routes.path(@socket, get_ui_theme_link.(@ui_theme)), class: "link p-2" do
             {_, svg } = icon_tag(@socket, "light-bulb", class: "w-4 h-4 inline-block mr-2")
-            Enum.join([svg, "Apperance: ", String.capitalize(@ui_theme)], " ")
+            Enum.join([svg, NewsbloatWeb.Gettext.gettext("Apperance")<>": ", String.capitalize(@ui_theme)], " ")
           end %>
           </li>
         </ul>
+        <%= live_component NewsbloatWeb.Components.LangSelectorComponent %>
       </div>
     </section>
     """

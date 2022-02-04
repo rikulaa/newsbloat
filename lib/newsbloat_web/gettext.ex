@@ -21,4 +21,8 @@ defmodule NewsbloatWeb.Gettext do
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
   use Gettext, otp_app: :newsbloat
+
+  def list_known_locales() do
+    Gettext.known_locales(__MODULE__)
+  end
 end

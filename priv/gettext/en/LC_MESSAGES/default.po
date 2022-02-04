@@ -1,0 +1,94 @@
+## "msgid"s in this file come from POT (.pot) files.
+##
+## Do not add, change, or remove "msgid"s manually here as
+## they're tied to the ones in the corresponding POT file
+## (with the same domain).
+##
+## Use "mix gettext.extract --merge" or "mix gettext.merge"
+## to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2\n"
+
+#, elixir-format
+#: lib/newsbloat_web/live/search_live/index.html.leex:4
+#: lib/newsbloat_web/live/search_live/index.html.leex:14
+msgid "search"
+msgstr "Search"
+
+#, elixir-format
+#: lib/newsbloat_web/live/search_live/index.html.leex:12
+msgid "loading"
+msgstr "Loading"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/index.html.leex:15
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:68
+msgid "Feed"
+msgid_plural "Feeds"
+msgstr[0] ""
+msgstr[1] ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:74
+#: lib/newsbloat_web/live/feed_live/show_item.html.leex:26
+msgid "Add to favourites"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:92
+msgid "Apperance"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:25
+msgid "Delete"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:24
+msgid "Edit"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:26
+msgid "Mark all as read"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:75
+msgid "New Feed"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:31
+msgid "No more entries! Show older ones?"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:22
+msgid "Refresh"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:70
+#: lib/newsbloat_web/live/feed_live/show_item.html.leex:22
+msgid "Remove from favourites"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:27
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:27
+msgid "Save"
+msgstr ""
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:83
+msgid "Search"
+msgstr "Search"
+
+#, elixir-format
+#: lib/newsbloat_web/live/components/lang_selector_component.ex:13
+msgid "Language"
+msgstr ""

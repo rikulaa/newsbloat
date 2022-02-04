@@ -1,0 +1,94 @@
+## "msgid"s in this file come from POT (.pot) files.
+##
+## Do not add, change, or remove "msgid"s manually here as
+## they're tied to the ones in the corresponding POT file
+## (with the same domain).
+##
+## Use "mix gettext.extract --merge" or "mix gettext.merge"
+## to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fi\n"
+"Plural-Forms: nplurals=2\n"
+
+#, elixir-format
+#: lib/newsbloat_web/live/search_live/index.html.leex:4
+#: lib/newsbloat_web/live/search_live/index.html.leex:14
+msgid "search"
+msgstr "Hae"
+
+#, elixir-format
+#: lib/newsbloat_web/live/search_live/index.html.leex:12
+msgid "loading"
+msgstr "Ladataan"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/index.html.leex:15
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:68
+msgid "Feed"
+msgid_plural "Feeds"
+msgstr[0] "Syöte"
+msgstr[1] "Syötteet"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:74
+#: lib/newsbloat_web/live/feed_live/show_item.html.leex:26
+msgid "Add to favourites"
+msgstr "Lisää suosikkeihin"
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:92
+msgid "Apperance"
+msgstr "Teema"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:25
+msgid "Delete"
+msgstr "Poista"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:24
+msgid "Edit"
+msgstr "Muokkaa"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:26
+msgid "Mark all as read"
+msgstr "Merkitse kaikki luetuiksi"
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:75
+msgid "New Feed"
+msgstr "Uusi Syöte"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:31
+msgid "No more entries! Show older ones?"
+msgstr "Ei enempää luettavaa! Näytä vanhemmat artikkelit?"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:22
+msgid "Refresh"
+msgstr "Päivitä"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/show.html.leex:70
+#: lib/newsbloat_web/live/feed_live/show_item.html.leex:22
+msgid "Remove from favourites"
+msgstr "Poista suosikeista"
+
+#, elixir-format
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:27
+#: lib/newsbloat_web/live/feed_live/form_component.html.leex:27
+msgid "Save"
+msgstr "Tallenna"
+
+#, elixir-format
+#: lib/newsbloat_web/live/sidebar_menu_component.ex:83
+msgid "Search"
+msgstr "Hae"
+
+#, elixir-format
+#: lib/newsbloat_web/live/components/lang_selector_component.ex:13
+msgid "Language"
+msgstr "Kieli"

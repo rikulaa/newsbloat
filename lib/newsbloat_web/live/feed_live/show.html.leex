@@ -52,11 +52,13 @@
                 <%= live_patch icon_tag(@socket, "arrow-circle-up", class: "w-4 h-4"), to: Routes.feed_show_path(@socket, :show, @feed)<>"#"<>to_string(item.id) %>
               </button>
             </div>
-            <p>
+            <p class="m-0">
             [<%= render_component "external_link.html", text: "Link", href: item.link %>]
             </p>
-            <div>
-              <p><%= item.safe_description |> raw %></p>
+            <div class="py-8">
+              <%= if item.safe_description do %>
+                <p class="lead mb-8"><%= item.safe_description |> raw %></p>
+              <% end %>
               <p><%= item.safe_content |> raw %></p>
             </div>
             <div class="mb-4">

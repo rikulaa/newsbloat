@@ -139,6 +139,10 @@ html.light {
   }
 }
 
+.heading { @apply text-2xl uppercase }
+.lead { @apply text-xl leading-normal; }
+
+
 .container {
   max-width: 60rem;
   @apply px-12 !important;

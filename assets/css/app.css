@@ -94,9 +94,6 @@ html.light {
     @apply text-foreground;
   }
 
-  .heading { @apply text-2xl uppercase }
-  .lead { @apply text-xl leading-normal; }
-
   /* TODO: 'external link' icon */
   a[target=_blank]:after {}
 

@@ -45,8 +45,22 @@ let liveSocket = new LiveSocket("/live", Socket, {
 const colorAncillary = getComputedStyle(document.documentElement)
   .getPropertyValue('--color-ancillary');
 topbar.config({barColors: {0: colorAncillary}, shadowColor: "rgba(0, 0, 0, .3)"})
-window.addEventListener("phx:page-loading-start", info => topbar.show())
-window.addEventListener("phx:page-loading-stop", info => topbar.hide())
+
+// Do not immediately show loader, actions are perceived faster this way.
+// https://hexdocs.pm/phoenix_live_view/installation.html#progress-animation
+let topBarScheduled = undefined
+
+window.addEventListener("phx:page-loading-start", () => {
+  if(!topBarScheduled) {
+    topBarScheduled = setTimeout(() => topbar.show(), 200)
+  }
+})
+
+window.addEventListener("phx:page-loading-stop", () => {
+  clearTimeout(topBarScheduled)
+  topBarScheduled = undefined
+  topbar.hide()
+})
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

@@ -19,6 +19,7 @@ defmodule Newsbloat.RSS.Item do
     field :guid, :string
     field :link, :string
     field :published_at, :utc_datetime
+    field :_search_tsv, :string, load_in_query: false
     # TODO: this should be a text field (in db)
     field :title, :string
     field :is_read, :boolean

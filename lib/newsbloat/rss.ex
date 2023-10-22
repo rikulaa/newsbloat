@@ -369,6 +369,7 @@ defmodule Newsbloat.RSS do
     # In case the tag already exists, don't do anything to it
     all_parsed_tags =
       all_parsed_tags_flat
+      |> Enum.filter(fn tag -> tag != nil and tag != String.trim("") end)
       |> Enum.reduce([], fn value, acc ->
         acc ++ [%{title: value, inserted_at: now, updated_at: now}]
       end)

@@ -288,7 +288,7 @@ defmodule Newsbloat.RSS do
           res =
             Item
             |> distinct(true)
-            |> join(:inner, [item], tag in assoc(item, :tags))
+            |> join(:left, [item], tag in assoc(item, :tags))
             |> where(
               [item, tags],
               fragment("_search_tsv @@ to_tsquery(?)", ^ts_query_string)

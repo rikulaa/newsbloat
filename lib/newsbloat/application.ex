@@ -19,6 +19,7 @@ defmodule Newsbloat.Application do
       # {Newsbloat.Worker, arg}
       {Newsbloat.Jobs.FetchNewFeedItems, name: NewsbloatWeb.Jobs.FetchNewFeedItems},
       {Newsbloat.Jobs.ResetCache, name: Newsbloat.Jobs.ResetCache},
+      {Newsbloat.Jobs.CleanOrphanedTags, name: Newsbloat.Jobs.CleanOrphanedTags},
       # Cache
       {Newsbloat.Cache, name: Newsbloat.Cache}
     ]

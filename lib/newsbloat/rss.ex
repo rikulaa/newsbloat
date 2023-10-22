@@ -247,49 +247,37 @@ defmodule Newsbloat.RSS do
 
   """
   def search_items(q \\ "") do
-    sql = " 
-      SELECT id
-      FROM 	(
-        SELECT 
-        items.id,
-        items.description,
-        (
-            to_tsvector(coalesce(items.title, '')) || 
-            to_tsvector(coalesce(items.description, '')) ||
-            to_tsvector(coalesce(items.content, '')) ||
-            to_tsvector(coalesce(string_agg(tags.title, ' '), ''))
-        ) as document
-        FROM items
-        LEFT OUTER  JOIN item_tags ON item_tags.item_id = items.id
-        LEFT OUTER  JOIN tags ON tags.id = item_tags.tag_id		
-        GROUP BY items.id
-      ) items_search
-      WHERE items_search.document @@ to_tsquery($1)
-      LIMIT 50
-    "
+    words = Regex.scan(~r/[a-zA-Z0-9]+/, q)
+    keyword_str = words |> Enum.join(" ")
 
     ts_query_string =
-      Regex.scan(~r/[a-zA-Z0-9]+/, q)
+      words
       # 'fuzzy' search for every word
       |> Enum.map(fn [part] -> part <> ":*" end)
       |> Enum.join(" & ")
 
-    # ts_query_string = Regex.replace(~r/\s/, q, " & ")
-
     if String.length(ts_query_string) > 0 do
-      query_string = ts_query_string
-
-      case Cache.get(query_string) do
+      # TODO: or select tags with equal match
+      case Cache.get(ts_query_string) do
+        # No cache entry found, fetch results from db
         {:error, _} ->
-          {:ok, %{rows: rows}} = Repo.query(sql, [query_string])
-          ids = rows |> Enum.map(&List.first(&1))
-
           res =
-            from(i in Item, where: i.id in ^ids, preload: [:feed])
+            Item
+            |> distinct(true)
+            |> join(:inner, [item], tag in assoc(item, :tags))
+            |> where(
+              [item, tags],
+              fragment("_search_tsv @@ to_tsquery(?)", ^ts_query_string)
+            )
+            |> or_where(
+              [_item, tags],
+              tags.title in [^keyword_str]
+            )
+            |> preload([:feed])
             |> Repo.all()
 
           # Cache results
-          Cache.insert(query_string, res)
+          Cache.insert(ts_query_string, res, 2)
           res
 
         {:ok, res} ->
@@ -488,16 +476,30 @@ defmodule Newsbloat.RSS do
           end).()
       |> Enum.map(fn entry -> entry.guid end)
 
-    (rss_items ++ atom_items)
-    |> Enum.filter(fn item -> Ecto.Changeset.get_field(item, :guid) not in existing_ids end)
-    |> Enum.with_index()
-    |> Enum.reduce(
-      Ecto.Multi.new(),
-      fn {changeset, idx}, multi ->
-        Ecto.Multi.insert(multi, Integer.to_string(idx), changeset)
-      end
-    )
-    |> Repo.transaction()
+    new_items =
+      (rss_items ++ atom_items)
+      |> Enum.filter(fn item -> Ecto.Changeset.get_field(item, :guid) not in existing_ids end)
+
+    new_item_guids = new_items |> Enum.map(fn item -> Ecto.Changeset.get_field(item, :guid) end)
+
+    res =
+      new_items
+      |> Enum.with_index()
+      |> Enum.reduce(
+        Ecto.Multi.new(),
+        fn {changeset, idx}, multi ->
+          Ecto.Multi.insert(multi, Integer.to_string(idx), changeset)
+        end
+      )
+      |> Repo.transaction()
+
+    # Add search index
+    Item
+    |> where([item], item.guid in ^new_item_guids)
+    |> Repo.all()
+    |> recalculate_search_index_for_items()
+
+    res
   end
 
   def update_item(%Item{} = item, attrs) do
@@ -511,6 +513,7 @@ defmodule Newsbloat.RSS do
   end
 
   def mark_item_as_favoured(%Item{} = item) do
+    # TODO: system tags should be more robust
     favourite_tag = Repo.one(from t in Tag, where: t.title == "Favourite")
     tags = item |> Map.get(:tags)
 
@@ -535,6 +538,28 @@ defmodule Newsbloat.RSS do
       Repo.all(from i in Item, where: [feed_id: ^feed.id, is_read: false], select: count(i.id))
 
     count
+  end
+
+  def recalculate_search_index_for_items(items \\ []) do
+    ids = items |> Enum.map(fn i -> i.id end)
+    sql = "
+    WITH cte AS (
+        SELECT 
+            items.id,
+            (
+                to_tsvector(coalesce(items.title, '')) || 
+                to_tsvector(coalesce(items.description, '')) ||
+                to_tsvector(coalesce(items.content, ''))
+            ) AS document
+        FROM items
+        WHERE items.id IN (#{1..length(ids) |> Enum.map(fn i -> '$#{i}' end) |> Enum.join(",")}) -- List the IDs you want to update
+    )
+    UPDATE items
+    SET _search_tsv = cte.document
+    FROM cte
+    WHERE items.id = cte.id;
+      "
+    Repo.query(sql, ids)
   end
 
   def fetch_feed_items_for_all_feeds() do

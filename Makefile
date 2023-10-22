@@ -1,3 +1,6 @@
+# Can run 4 parallel jobs at the same time
+MAKEFLAGS += --jobs 4
+
 .MAIN: help
 
 help:           ## Show this help.
@@ -14,3 +17,8 @@ dev: ## Start development (boots up db and elixir processes)
 .PHONY: initialize
 initialize: ## Initializes development environmnet
 	./.bin/initialize.sh
+
+
+.PHONY: open
+open:
+	open http://localhost:4000

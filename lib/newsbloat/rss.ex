@@ -148,6 +148,15 @@ defmodule Newsbloat.RSS do
 
   """
   def delete_feed(%Feed{} = feed) do
+    Item
+    |> join(:inner, [item], tag in assoc(item, :tags))
+    |> where([item, tag], item.feed_id == 10)
+    |> select([_, tags], tags)
+    |> Repo.delete_all()
+
+    Item
+    |> where([item], item.feed_id == ^feed.id)
+
     Repo.delete(feed)
   end
 

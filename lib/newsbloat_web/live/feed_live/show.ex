@@ -20,40 +20,41 @@ defmodule NewsbloatWeb.FeedLive.Show do
 
   @impl true
   def handle_params(%{"id" => _id} = params, _, %{assigns: assigns} = socket) do
-    IO.inspect(["assign", Map.keys(assigns), assigns[:ui_theme]])
     # TODO: id might change here in case we are using live_patch (instead of redirect)
-    feed = RSS.get_feed!(assigns.id)
-    show_is_read = params |> Map.get("is_read", false) == true
+    # feed = RSS.get_feed!(assigns.id)
 
-    item_id =
+    open_id =
       params
-      |> Map.get("item_id")
-      |> (fn id ->
-            if id do
-              String.to_integer(id)
-            else
-              nil
-            end
-          end).()
+      |> Map.get("open_id")
+      |> maybe_string_to_integer()
+
+    close_id =
+      params
+      |> Map.get("close_id")
+      |> maybe_string_to_integer()
 
     # expand the selected item, NOTE: this can become slow after many too many loaded entries, should probably implement more efficient way to show the read status in the ui
-    if item_id do
-      {:ok, item} = RSS.get_feed_item(feed, item_id) |> RSS.mark_item_as_read()
-      socket = update_item_in_place_in_socket(socket, item)
+    if open_id do
+      {:ok, item} = RSS.get_feed_item(assigns.feed, open_id) |> RSS.mark_item_as_read()
+
+      socket =
+        update_item_in_place_in_socket(socket, item)
+        |> assign(:opened_ids, Map.put(socket.assigns.opened_ids, open_id, true))
 
       {:noreply,
        socket
        |> assign(:page_title, page_title(socket.assigns.live_action))
-       |> assign(:item_id, item_id)}
+       |> assign(:item_id, open_id)}
     else
       {:noreply,
        socket
        |> assign(:page_title, page_title(socket.assigns.live_action))
-       |> assign(:item_id, item_id)}
+       |> assign(:item_id, nil)
+       |> assign(:opened_ids, Map.delete(socket.assigns.opened_ids, close_id))}
     end
   end
 
-  defp initialize(%{assigns: _assigns} = socket, id, opts \\ []) do
+  defp initialize(%{assigns: _assigns} = socket, id, opts) do
     feed = RSS.get_feed!(id)
 
     kw_opts = Enum.map(opts, fn {key, value} -> {String.to_existing_atom(key), value} end)
@@ -62,17 +63,13 @@ defmodule NewsbloatWeb.FeedLive.Show do
     |> assign(:id, id)
     |> assign(:feed, feed)
     |> assign(:page, fetch_page_by_number(feed, 1, kw_opts))
+    |> assign(:opened_ids, %{})
+    |> assign(:previous_id, nil)
   end
 
   defp fetch_page_by_number(feed, page, opts \\ []) do
     RSS.list_feed_items(feed, page, opts)
   end
-
-  # defp apply_action(socket, :new, _params) do
-  #   socket
-  #   |> assign(:page_title, "New Feed")
-  #   |> assign(:feed, %Feed{})
-  # end
 
   @impl true
   def handle_event("refresh_feed", _, socket) do
@@ -144,4 +141,7 @@ defmodule NewsbloatWeb.FeedLive.Show do
   defp page_title(:show), do: NewsbloatWeb.Gettext.gettext("Show Feed")
   defp page_title(:edit), do: NewsbloatWeb.Gettext.gettext("Edit Feed")
   defp page_title(:new), do: NewsbloatWeb.Gettext.gettext("New Feed")
+
+  defp maybe_string_to_integer(string) when is_binary(string), do: String.to_integer(string)
+  defp maybe_string_to_integer(_), do: nil
 end

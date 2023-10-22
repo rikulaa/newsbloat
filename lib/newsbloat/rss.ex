@@ -236,6 +236,7 @@ defmodule Newsbloat.RSS do
           |> Item.with_safe_content_and_desc()
 
         # Cache results
+        # TODO: invalidate cache if item is updated (e.g mark as read)
         Cache.insert(cache_id, item, 60 * 60)
         item
 
@@ -532,6 +533,8 @@ defmodule Newsbloat.RSS do
     |> Item.changeset(attrs)
     |> Repo.update()
   end
+
+  def mark_item_as_read(%Item{:is_read => true} = item), do: {:ok, item}
 
   def mark_item_as_read(%Item{} = item) do
     update_item(item, %{is_read: true})

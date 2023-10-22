@@ -148,6 +148,15 @@ defmodule Newsbloat.RSS do
 
   """
   def delete_feed(%Feed{} = feed) do
+    Item
+    |> join(:inner, [item], tag in assoc(item, :tags))
+    |> where([item, tag], item.feed_id == 10)
+    |> select([_, tags], tags)
+    |> Repo.delete_all()
+
+    Item
+    |> where([item], item.feed_id == ^feed.id)
+
     Repo.delete(feed)
   end
 
@@ -170,11 +179,26 @@ defmodule Newsbloat.RSS do
         where: item.feed_id == ^feed.id,
         update: [set: [is_read: true]]
 
-    {updates, _} =
-      query
-      |> Repo.update_all([])
+    query
+    |> Repo.update_all([])
 
     {:ok, feed}
+  end
+
+  def clean_orphaned_tags() do
+    orphaned_tags_query =
+      Tag
+      |> join(:left, [tag], ft in fragment("feed_tags"), on: ft.tag_id == tag.id)
+      |> join(:left, [tag, ft, it], it in fragment("item_tags"), on: it.tag_id == tag.id)
+      |> where([tag, ft, it], is_nil(ft.tag_id) and is_nil(it.tag_id))
+      |> select([tag, ft, it], tag.id)
+
+    {entries_deleted, _} =
+      Tag
+      |> where([tag], tag.id in subquery(orphaned_tags_query))
+      |> Repo.delete_all()
+
+    {:ok, entries_deleted}
   end
 
   def get_value_from_map_list_by_key(map_list, key) do

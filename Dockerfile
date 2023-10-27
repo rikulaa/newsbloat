@@ -1,5 +1,5 @@
 # https://staknine.com/build-an-elixir-release-with-docker-to-deploy-anywhere/
-FROM elixir:1.12.3-alpine as build
+FROM hexpm/elixir:1.12.3-erlang-24.3.4.13-alpine-3.17.5 AS build
 
 # install build dependencies
 RUN apk add --update git build-base nodejs npm yarn python3
@@ -12,34 +12,39 @@ RUN mix do local.hex --force, local.rebar --force
 
 # set build ENV
 ENV MIX_ENV=prod
-COPY .env /app
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
 COPY config config
-RUN . .env && mix deps.get --only prod
-RUN . .env && MIX_ENV=prod mix deps.compile
+RUN mix deps.get --only prod
+RUN mix deps.compile
+
+COPY assets assets
+COPY lib lib
+COPY priv priv
 
 # build assets
-COPY assets assets
-RUN cd assets && npm install && NODE_ENV=production npm run deploy
-RUN . .env && mix phx.digest
+RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
+RUN NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider npm run deploy --prefix ./assets
+RUN mix phx.digest
 
-# build project
-COPY priv priv
-COPY lib lib
-RUN . .env && MIX_ENV=prod mix compile
-
-# build release
-# at this point we should copy the rel directory but
-# we are not using it so we can omit it
+# compile and build release
+# uncomment COPY if rel/ exists
 # COPY rel rel
-RUN . .env && MIX_ENV=prod mix release
+RUN mix do compile, release
+
+# ==============================================================
+# Release
+# ==============================================================
 
 # prepare release image
-FROM alpine:3.14.2 AS app
+# https://stackoverflow.com/questions/72609505/issue-with-building-elixir-and-beam-on-alpine-linux
+# FROM alpine:3.14.2 AS app
+# FROM hexpm/elixir:1.12.3-erlang-22.1.8.1-ubuntu-focal-20231003 AS app
+FROM hexpm/elixir:1.12.3-erlang-24.3.4.13-alpine-3.17.5 AS app
 
 # install runtime dependencies
+# RUN apt-get update
 RUN apk add --update bash openssl postgresql-client bash openssl libgcc libstdc++ ncurses-libs
 
 EXPOSE 4000
@@ -53,6 +58,7 @@ WORKDIR /app
 COPY --from=build /app/_build /app/_build
 COPY .env .
 COPY entrypoint.sh .
+
 RUN chown -R nobody: /app
 USER nobody
 

@@ -114,7 +114,7 @@ defmodule NewsbloatWeb do
 
         # TODO: cache these
         svg_tag =
-          File.read!("priv/static/icons/" <> name <> ".svg")
+          File.read!(Application.app_dir(:newsbloat, "priv/static/icons/" <> name <> ".svg"))
           # Yeah, not the most safe solution to manipulate html with regex...
           |> String.replace("<svg", svg_starting_tag_with_classes)
           |> raw()

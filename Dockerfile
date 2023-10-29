@@ -56,7 +56,6 @@ WORKDIR /app
 
 # copy release to app container
 COPY --from=build /app/_build /app/_build
-COPY .env .
 COPY entrypoint.sh .
 
 RUN chown -R nobody: /app

@@ -107,9 +107,7 @@ defmodule Newsbloat.RSS do
       |> Repo.insert()
     ) do
       {:ok, feed} ->
-        {:ok, items} = fetch_feed_items(feed)
-        IO.puts("SHOULD HAVE FETCHTED")
-        IO.puts(Enum.count(items))
+        {:ok, _} = fetch_feed_items(feed)
         {:ok, feed}
 
       err ->

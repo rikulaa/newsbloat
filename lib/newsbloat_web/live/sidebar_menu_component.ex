@@ -36,7 +36,6 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
 
   # TODO: this component should be at root level with connected socket (without needing to do full re-render on page changes)
   def render(assigns) do
-    # IO.inspect ["assigns", assigns]
     get_feed_title = fn feed, unread_count ->
       if unread_count != 0 do
         feed.title <> " (" <> to_string(unread_count) <> ")"

@@ -28,5 +28,4 @@ Should support premade themes
 
 
 
-- [ ] bookmarks
 

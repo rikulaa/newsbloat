@@ -349,6 +349,7 @@ defmodule Newsbloat.RSS do
   end
 
   def fetch_feed_items(%Feed{} = feed) do
+    IO.inspect("Fetch items for feed: #{feed.title}")
     parsed_body = fetch_feed_body_by_url(feed.url)
 
     now = DateTime.utc_now() |> DateTime.truncate(:second) |> DateTime.to_naive()

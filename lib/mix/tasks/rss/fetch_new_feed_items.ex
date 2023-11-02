@@ -3,8 +3,9 @@ defmodule Mix.Tasks.Rss.FetchNewFeedItems do
 
   alias Newsbloat.RSS
 
-  @requirements ["app.start"]
   @shortdoc "Fetch new feed items"
+  @moduledoc "Fetch new feed items"
+  @requirements ["app.start"]
 
   @impl Mix.Task
   def run(_args) do

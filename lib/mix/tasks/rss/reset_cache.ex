@@ -3,8 +3,9 @@ defmodule Mix.Tasks.Rss.ResetCache do
 
   alias Newsbloat.Cache
 
-  @requirements ["app.start"]
   @shortdoc "Reset application cache"
+  @moduledoc "Reset application cache"
+  @requirements ["app.start"]
 
   @impl Mix.Task
   def run(_args) do

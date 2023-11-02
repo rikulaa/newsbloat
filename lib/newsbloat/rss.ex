@@ -567,7 +567,10 @@ defmodule Newsbloat.RSS do
     count
   end
 
-  def recalculate_search_index_for_items(items \\ []) do
+  # In case empty list, do nothing
+  def recalculate_search_index_for_items([]), do: :ok
+
+  def recalculate_search_index_for_items(items = [_ | _]) do
     ids = items |> Enum.map(fn i -> i.id end)
     sql = "
     WITH cte AS (
@@ -586,7 +589,8 @@ defmodule Newsbloat.RSS do
     FROM cte
     WHERE items.id = cte.id;
       "
-    Repo.query(sql, ids)
+    {:ok, _} = Repo.query(sql, ids)
+    :ok
   end
 
   def fetch_feed_items_for_all_feeds() do

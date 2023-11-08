@@ -6,7 +6,7 @@ defmodule Newsbloat.Application do
   use Application
 
   def start(_type, _args) do
-    prod_jobs = [
+    cron_jobs = [
       {Newsbloat.Jobs.FetchNewFeedItems, name: NewsbloatWeb.Jobs.FetchNewFeedItems},
       {Newsbloat.Jobs.ResetCache, name: Newsbloat.Jobs.ResetCache},
       {Newsbloat.Jobs.CleanOrphanedTags, name: Newsbloat.Jobs.CleanOrphanedTags}
@@ -26,7 +26,7 @@ defmodule Newsbloat.Application do
         # {Newsbloat.Worker, arg}
         # Cache
         {Newsbloat.Cache, name: Newsbloat.Cache}
-      ] ++ if Mix.env() == :prod, do: prod_jobs, else: []
+      ] ++ if Application.get_env(:newsbloat, :enable_cron), do: cron_jobs, else: []
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

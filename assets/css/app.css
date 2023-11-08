@@ -100,19 +100,25 @@ html.light {
   a {
     @apply inline-block;
   }
+  a:focus {
+    @apply outline-none shadow-outline-foreground;
+  }
+
   button:not(.plain), .button {
     @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none cursor-pointer bg-transparent leading-normal ;
-    &:hover {
-      @apply text-background transition-all;
-      background-size: 100% 100%;
-    }
-    &:focus {
-      @apply outline-none shadow-outline-foreground;
-    }
     background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
     background-size: 100% 0px;
     background-position: left bottom;
     background-repeat: no-repeat;
+  }
+
+  button:not(.plain):hover, .button:hover {
+      @apply text-background transition-all;
+      background-size: 100% 99%;
+  }
+
+  button:not(.plain):focus, .button:focus {
+      @apply outline-none shadow-outline-foreground;
   }
 
   input, textarea, fieldset, select {

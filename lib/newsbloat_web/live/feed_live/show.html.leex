@@ -47,13 +47,6 @@
 
         <%= if item.id == @item_id or Map.has_key?(@opened_ids, item.id) do %>
           <div class="">
-          <%= if item.id == @item_id do %>
-            <div class="fixed bottom-0">
-              <button role="button" class="z-50 link -ml-10 px-2 py-4 border-none">
-                <%= live_patch icon_tag(@socket, "arrow-circle-up", class: "w-4 h-4"), to: Routes.feed_show_path(@socket, :show, @feed, close_id: @item_id)<>"#"<>to_string(@item_id) %>
-              </button>
-            </div>
-            <% end %>
             <p class="m-0">
             [<%= render_component "external_link.html", text: "Link", href: item.link %>]
             </p>

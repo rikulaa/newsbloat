@@ -36,14 +36,6 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
 
   # TODO: this component should be at root level with connected socket (without needing to do full re-render on page changes)
   def render(assigns) do
-    get_feed_title = fn feed, unread_count ->
-      if unread_count != 0 do
-        feed.title <> " (" <> to_string(unread_count) <> ")"
-      else
-        feed.title
-      end
-    end
-
     get_ui_theme_link = fn ui_theme ->
       if ui_theme == "dark" do
         "?ui_theme=light"
@@ -53,13 +45,57 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
     end
 
     ~L"""
+    <!-- MOBILE MENU -->
     <section
       x-data="{ isOpen: false }"
-      x-bind:class="isOpen ? 'bg-background shadow-lg w-screen lg:w-64 h-screen overflow-y-auto pb-16' : 'bg-transparent w-0'"
-      class="fixed top-0 p-4 z-10"
+      x-bind:class="isOpen ? 'bg-background shadow-lg w-screen h-screen overflow-y-auto pb-16' : 'bg-transparent w-0'"
+      class="fixed lg:hidden top-0 p-4 z-10"
       @click.outside="isOpen = false"
     >
-    <button class="fixed lg:relative bottom-0 right-0 m-4 lg:m-0 bg-background group z-10" @click="isOpen = ! isOpen">
+    <button class="fixed bottom-0 right-0 m-4 lg:m-0 bg-background group z-10" @click="isOpen = ! isOpen">
+      <%= icon_tag(@socket, "menu", class: "w-4 h-4 transform transition-transform group-hover:rotate-90") %>
+    </button>
+      <div x-show="isOpen">
+        <h3>
+          <%= link NewsbloatWeb.Gettext.ngettext("Feed", "Feeds", 2), to: Routes.feed_index_path(@socket, :index) %>
+        </h3>
+
+        <%= live_component NewsbloatWeb.FeedListComponent, current_feed: @current_feed %>
+        <ul class="mb-4">
+          <li>
+            <%= live_patch NewsbloatWeb.Gettext.gettext("New Feed"), to: Routes.feed_index_path(@socket, :new), class: "link p-2" %>
+          </li>
+        </ul>
+        <ul class="mb-4">
+          <li class="ml-auto mr-0">
+          <li>
+            <%= link_with_html to: Routes.search_index_path(@socket, :index), class: "link p-2" do
+              {_, svg } = icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2")
+              Enum.join([svg, NewsbloatWeb.Gettext.gettext("Search")], " ")
+            end %>
+          </li>
+          </li>
+        </ul>
+        <ul>
+          <li>
+          <%= link_with_html to: Routes.path(@socket, get_ui_theme_link.(@ui_theme)), class: "link p-2" do
+            {_, svg } = icon_tag(@socket, "light-bulb", class: "w-4 h-4 inline-block mr-2")
+            Enum.join([svg, NewsbloatWeb.Gettext.gettext("Apperance")<>": ", String.capitalize(@ui_theme)], " ")
+          end %>
+          </li>
+        </ul>
+        <%= live_component NewsbloatWeb.Components.LangSelectorComponent %>
+      </div>
+    </section>
+    <!-- END MOBILE MENU -->
+
+    <!-- DESKTOP MENU -->
+    <section
+      x-data="{ isOpen: true }"
+      x-bind:class="isOpen ? 'bg-background shadow-lg w-64 h-screen z-1 overflow-y-auto pb-16' : 'bg-transparent w-0'"
+      class="fixed hidden lg:block top-0 p-4"
+    >
+    <button class="fixed lg:relative bottom-0 right-0 m-4 m-0 bg-background group z-10" @click="isOpen = ! isOpen">
       <%= icon_tag(@socket, "menu", class: "w-4 h-4 transform transition-transform group-hover:rotate-90") %>
     </button>
       <div x-show="isOpen">
@@ -95,6 +131,9 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
         <%= live_component NewsbloatWeb.Components.LangSelectorComponent %>
       </div>
     </section>
+
+    <!-- END DESKTOP MENU -->
+
     """
   end
 end

@@ -49,7 +49,10 @@ module.exports = {
       ],
     },
     extend: {
-      colors: COLORS
+      colors: COLORS,
+      zIndex: {
+        '1': 1,
+      }
     },
   },
   variants: {

@@ -91,7 +91,7 @@ html.light {
     @apply mb-4 leading-7;
   }
   a {
-    @apply text-foreground;
+    @apply relative text-foreground;
   }
 
   /* TODO: 'external link' icon */
@@ -147,7 +147,7 @@ html.light {
 
 
 .container {
-  max-width: 60rem;
+  max-width: 50rem;
   @apply px-12 !important;
   @screen md {
     @apply px-8 !important;
@@ -210,9 +210,9 @@ html.light {
 }
 
 .phx-modal {
+  @apply z-10;
   opacity: 1!important;
   position: fixed;
-  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;

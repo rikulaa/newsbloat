@@ -6,10 +6,12 @@ defmodule NewsbloatWeb.Components.LangSelectorComponent do
     ~L"""
     <div x-data="{ isLangSelectorOpen: false }" class="mb-4">
       <button class="plain p-2" @click="isLangSelectorOpen = !isLangSelectorOpen">
+      <div class="mr-2 inline-block">
         <span class="inline-block transform transition" x-bind:class="isLangSelectorOpen ? 'rotate-180' : ''">
-          <%= icon_tag(@socket, "angle-down", class: "w-4 h-4 inline-block") %>
+        <%= icon_tag(@socket, "angle-down", class: "w-4 h-4 inline-block") %>
         </span>
-        <span class="inline-block ml-2">
+      </div>
+        <span class="inline-block">
           <%= NewsbloatWeb.Gettext.gettext("Language") %>
         </span>
       </button>

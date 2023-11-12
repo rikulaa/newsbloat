@@ -7,8 +7,6 @@
     return_to: Routes.feed_show_path(@socket, :show, @feed) %>
 <% end %>
 
-<%= live_component NewsbloatWeb.SidebarMenuComponent, current_feed: @feed, ui_theme: @ui_theme %>
-
 <section class="container content mx-auto mt-8 lg:mt-16">
   <h2 class="mb-8"> <%= @feed.title %></h2>
   <div class="mb-8">

@@ -7,5 +7,10 @@
     phx-click="lv:clear-flash"
     phx-value-key="error"><%= live_flash(@flash, :error) %></p>
 
+    <%= live_component NewsbloatWeb.SidebarMenuComponent,
+      ui_theme: @ui_theme,
+      current_feed: assigns[:feed]
+    %>
+
   <%= @inner_content %>
 </main>

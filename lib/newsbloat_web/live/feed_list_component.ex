@@ -5,9 +5,15 @@ defmodule NewsbloatWeb.FeedListComponent do
   alias Newsbloat.RSS.Feed
 
   def update(assings, socket) do
+    current_feed =
+      case Map.get(assings, :current_feed) do
+        nil -> %Feed{}
+        feed -> feed
+      end
+
     {:ok,
      socket
-     |> assign(:current_feed, Map.get(assings, :current_feed, %Feed{}))
+     |> assign(:current_feed, current_feed)
      |> assign(:feeds, list_feeds())}
   end
 
@@ -38,7 +44,7 @@ defmodule NewsbloatWeb.FeedListComponent do
     <ul class="mb-4">
       <%= for %{ :feed => feed, :unread_count => unread_count } <- @feeds do %>
         <li>
-          <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if @current_feed.id == feed.id, do: "link p-2 w-full truncate active", else: "link p-2 truncate w-full" %>
+          <%= live_redirect get_feed_title.(feed, unread_count), to: Routes.feed_show_path(@socket, :show, feed), class: if Map.get(@current_feed, :id) == feed.id, do: "link p-2 w-full truncate active", else: "link p-2 truncate w-full" %>
         </li>
       <% end %>
     </ul>

@@ -67,10 +67,10 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
         <ul class="mb-4">
           <li class="ml-auto mr-0">
           <li>
-            <%= link_with_html to: Routes.search_index_path(@socket, :index), class: "link p-2" do
-              {_, svg } = icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2")
-              Enum.join([svg, NewsbloatWeb.Gettext.gettext("Search")], " ")
-            end %>
+            <%= live_patch to: Routes.search_index_path(@socket, :index), class: "link p-2" do %>
+              <%= icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2") %>
+              <%= NewsbloatWeb.Gettext.gettext("Search") %>
+            <% end %>
           </li>
           </li>
         </ul>
@@ -112,10 +112,10 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
         <ul class="mb-4">
           <li class="ml-auto mr-0">
           <li>
-            <%= link_with_html to: Routes.search_index_path(@socket, :index), class: "link p-2" do
-              {_, svg } = icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2")
-              Enum.join([svg, NewsbloatWeb.Gettext.gettext("Search")], " ")
-            end %>
+            <%= live_patch to: Routes.search_index_path(@socket, :index), class: "link p-2" do %>
+              <%= icon_tag(@socket, "search", class: "w-4 h-4 inline-block mr-2") %>
+              <%= NewsbloatWeb.Gettext.gettext("Search") %>
+            <% end %>
           </li>
           </li>
         </ul>

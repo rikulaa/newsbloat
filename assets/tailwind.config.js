@@ -13,8 +13,8 @@ module.exports = {
     "../lib/**/*.leex",
     "../lib/**/*_view.ex",
     "../lib/**/views/*.ex",
-    "../lib/**/live/*.ex",
-    "../lib/**/live/*.leex"
+    "../lib/**/live/**/*.ex",
+    "../lib/**/live/**/*.leex"
   ],
 
   darkMode: false, // or 'media' or 'class'

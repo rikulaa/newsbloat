@@ -15,20 +15,25 @@
     <% end %>
   </div>
 
-  <div class="mb-8 lg:mb-16 flex flex-wrap">
-    <button class="btn btn-sm mb-2 mr-2 flex items-center justify-center" phx-click="refresh_feed">
-    <%= icon_tag(@socket, "reload", class: "w-3 h-3 mr-2") %>
-      <%= NewsbloatWeb.Gettext.gettext("Refresh") %>
-    </button>
-    <%= live_patch to: Routes.feed_show_path(@socket, :edit, @feed), class: "btn btn-sm mb-2 mr-2 flex items-center justify-center" do %>
-      <%= icon_tag(@socket, "pencil", class: "w-3 h-3 mr-2") %>
-      <%= NewsbloatWeb.Gettext.gettext("Edit") %>
-    <% end %>
-    <button class="btn btn-sm mb-2 mr-2 flex items-center justify-center" phx-click="mark_all_as_read">
-      <%= icon_tag(@socket, "check", class: "w-3 h-3 mr-2") %>
-      <%= NewsbloatWeb.Gettext.gettext("Mark all as read") %></button>
-    <%# <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index), class: "link p-2" %1></span> %>
-  </div>
+  <details class="mb-8 lg:mb-16 ">
+    <summary class="mb-4 list-none">
+      <%= icon_tag(@socket, "settings", class: "") %>
+    </summary>
+    <div class="flex flex-wrap">
+      <button class="btn btn-sm mb-2 mr-2 flex items-center justify-center" phx-click="refresh_feed">
+      <%= icon_tag(@socket, "reload", class: "w-3 h-3 mr-2") %>
+        <%= NewsbloatWeb.Gettext.gettext("Refresh") %>
+      </button>
+      <%= live_patch to: Routes.feed_show_path(@socket, :edit, @feed), class: "btn btn-sm mb-2 mr-2 flex items-center justify-center" do %>
+        <%= icon_tag(@socket, "pencil", class: "w-3 h-3 mr-2") %>
+        <%= NewsbloatWeb.Gettext.gettext("Edit") %>
+      <% end %>
+      <button class="btn btn-sm mb-2 mr-2 flex items-center justify-center" phx-click="mark_all_as_read">
+        <%= icon_tag(@socket, "check", class: "w-3 h-3 mr-2") %>
+        <%= NewsbloatWeb.Gettext.gettext("Mark all as read") %></button>
+      <%# <span><%= live_redirect "Back", to: Routes.feed_index_path(@socket, :index), class: "link p-2" %1></span> %>
+    </div>
+  </details>
 
   <%= if length(@page.entries) == 0 do %>
     <span><%= live_redirect NewsbloatWeb.Gettext.gettext("No more entries! Show older ones?"), to: Routes.feed_show_path(@socket, :show, @feed, is_read: true) %></span>

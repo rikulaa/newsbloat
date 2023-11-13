@@ -100,8 +100,11 @@ html.light {
   a {
     @apply inline-block;
   }
-  a:focus {
+  a:focus, summary:focus {
     @apply outline-none shadow-outline-foreground;
+  }
+  summary {
+    @apply cursor-pointer;
   }
 
   .btn {

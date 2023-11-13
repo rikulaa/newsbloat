@@ -107,6 +107,14 @@ html.light {
     @apply cursor-pointer;
   }
 
+  details.plain > summary {
+    @apply list-none;
+  }
+  details.plain > summary::-webkit-details-marker {
+    display: none;
+  }
+
+
   .btn {
     @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none cursor-pointer bg-transparent leading-normal ;
     background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));

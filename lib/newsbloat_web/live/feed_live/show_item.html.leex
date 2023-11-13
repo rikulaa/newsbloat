@@ -17,11 +17,11 @@
     </div>
     <div class="mb-8">
       <%= if @item.tags |> Enum.map(&Map.get(&1, :title)) |> Enum.member?("Favourite") do %>
-        <button phx-click="mark_as_non_favoured" phx-value-item_id="<%= @item.id %>">
+        <button class="btn" phx-click="mark_as_non_favoured" phx-value-item_id="<%= @item.id %>">
           <%= NewsbloatWeb.Gettext.gettext("Remove from favourites") %>
         </button>
       <% else %>
-        <button phx-click="mark_as_favoured" phx-value-item_id="<%= @item.id %>">
+        <button class="btn" phx-click="mark_as_favoured" phx-value-item_id="<%= @item.id %>">
           <%= NewsbloatWeb.Gettext.gettext("Add to favourites") %>
         </button>
       <% end %>

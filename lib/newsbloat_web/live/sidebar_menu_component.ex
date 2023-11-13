@@ -50,7 +50,7 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
       class="fixed lg:hidden top-0 p-4 z-10"
       @click.outside="isOpen = false"
     >
-    <button class="fixed bottom-0 right-0 m-4 lg:m-0 bg-background group z-10" @click="isOpen = ! isOpen">
+    <button class="btn fixed bottom-0 right-0 m-4 lg:m-0 bg-background group z-10" @click="isOpen = ! isOpen">
       <%= icon_tag(@socket, "menu", class: "w-4 h-4 transform transition-transform group-hover:rotate-90") %>
     </button>
       <div x-show="isOpen">
@@ -94,7 +94,7 @@ defmodule NewsbloatWeb.SidebarMenuComponent do
       x-bind:class="isOpen ? 'bg-background shadow-lg w-64 h-screen z-1 overflow-y-auto pb-16' : 'bg-transparent w-0'"
       class="fixed hidden lg:block top-0 p-4"
     >
-    <button class="fixed lg:relative bottom-0 right-0 m-4 m-0 bg-background group z-10" @click="localStorage.setItem('is-navigation-sidebar-open', !isOpen); isOpen = ! isOpen">
+    <button class="btn fixed lg:relative bottom-0 right-0 m-4 m-0 bg-background group z-10" @click="localStorage.setItem('is-navigation-sidebar-open', !isOpen); isOpen = ! isOpen">
       <%= icon_tag(@socket, "menu", class: "w-4 h-4 transform transition-transform group-hover:rotate-90") %>
     </button>
       <div x-show="isOpen">

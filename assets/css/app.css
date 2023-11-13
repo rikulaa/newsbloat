@@ -104,20 +104,23 @@ html.light {
     @apply outline-none shadow-outline-foreground;
   }
 
-  button:not(.plain), .button {
+  .btn {
     @apply text-foreground transition-all outline-none px-6 py-2 border-foreground border outline-none cursor-pointer bg-transparent leading-normal ;
     background-image: linear-gradient(to top,var(--color-foreground),var(--color-foreground));
     background-size: 100% 0px;
     background-position: left bottom;
     background-repeat: no-repeat;
   }
+  .btn-sm {
+    @apply px-2 py-1 text-xs;
+  }
 
-  button:not(.plain):hover, .button:hover {
+  .btn:hover {
       @apply text-background transition-all;
       background-size: 100% 99%;
   }
 
-  button:not(.plain):focus, .button:focus {
+  .btn:focus {
       @apply outline-none shadow-outline-foreground;
   }
 

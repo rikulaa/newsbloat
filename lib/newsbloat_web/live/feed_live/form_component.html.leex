@@ -24,6 +24,6 @@
     <%= if !is_nil(Map.get(@feed, :id)) do %>
       <%= link NewsbloatWeb.Gettext.gettext("Delete"), to: "#", phx_click: "delete", phx_target: @myself, phx_value_id: @feed.id, data: [confirm: "Are you sure?"] %>
     <% end %>
-    <%= submit NewsbloatWeb.Gettext.gettext("Save"), phx_disable_with: NewsbloatWeb.Gettext.gettext("Save") <> "...", class: "mr-0 ml-auto" %>
+    <%= submit NewsbloatWeb.Gettext.gettext("Save"), phx_disable_with: NewsbloatWeb.Gettext.gettext("Save") <> "...", class: "mr-0 ml-auto btn" %>
   </div>
 </form>

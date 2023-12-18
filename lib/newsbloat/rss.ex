@@ -374,80 +374,85 @@ defmodule Newsbloat.RSS do
       (item_tags ++ feed_tags)
       |> Enum.uniq()
 
-    # Store every found tag in the database.
-    # In case the tag already exists, don't do anything to it
-    create_tags_from_list(all_parsed_tags_flat)
+    # Start transaction
+    Repo.transaction(fn ->
+      # Store every found tag in the database.
+      # In case the tag already exists, don't do anything to it
+      create_tags_from_list(all_parsed_tags_flat)
 
-    # Fetch tags from db as the 'insert_all' on_conflict: :nothing, does not return the list of entries
-    tags_from_db = Repo.all(from t in Tag, where: t.title in ^all_parsed_tags_flat)
+      # Fetch tags from db as the 'insert_all' on_conflict: :nothing, does not return the list of entries
+      tags_from_db = Repo.all(from t in Tag, where: t.title in ^all_parsed_tags_flat)
 
-    # Make sure 'tags' are loaded for feed
-    feed = Repo.one(from(f in Feed, where: f.id == ^feed.id, preload: [:tags]))
+      # Make sure 'tags' are loaded for feed
+      feed = Repo.one(from(f in Feed, where: f.id == ^feed.id, preload: [:tags]))
 
-    updated_tags_for_feed =
-      tags_from_db
-      |> Enum.filter(fn t -> Enum.member?(feed_tags, t.title) end)
-      |> Enum.concat(feed.tags)
+      updated_tags_for_feed =
+        tags_from_db
+        |> Enum.filter(fn t -> Enum.member?(feed_tags, t.title) end)
+        |> Enum.concat(feed.tags)
 
-    feed
-    |> Feed.changeset(Map.from_struct(feed))
-    |> Ecto.Changeset.put_assoc(:tags, updated_tags_for_feed)
-    |> Repo.update()
+      feed
+      |> Feed.changeset(Map.from_struct(feed))
+      |> Ecto.Changeset.put_assoc(:tags, updated_tags_for_feed)
+      |> Repo.update()
 
-    item_changesets =
-      data
-      |> Map.get(:items)
-      |> Enum.map(fn item ->
-        item_tags = item |> Map.get(:tags)
+      item_changesets =
+        data
+        |> Map.get(:items)
+        |> Enum.map(fn item ->
+          item_tags = item |> Map.get(:tags)
 
-        Item.changeset(%Item{}, %{
-          published_at: Map.get(item, :published_at),
-          guid: Map.get(item, :guid),
-          title: Map.get(item, :title),
-          link: Map.get(item, :link),
-          description: Map.get(item, :description),
-          content: Map.get(item, :content)
-        })
-        |> Ecto.Changeset.put_change(:feed_id, feed.id)
-        |> Ecto.Changeset.put_assoc(
-          :tags,
-          tags_from_db |> Enum.filter(fn t -> Enum.member?(item_tags, t.title) end)
+          Item.changeset(%Item{}, %{
+            published_at: Map.get(item, :published_at),
+            guid: Map.get(item, :guid),
+            title: Map.get(item, :title),
+            link: Map.get(item, :link),
+            description: Map.get(item, :description),
+            content: Map.get(item, :content)
+          })
+          |> Ecto.Changeset.put_change(:feed_id, feed.id)
+          |> Ecto.Changeset.put_assoc(
+            :tags,
+            tags_from_db |> Enum.filter(fn t -> Enum.member?(item_tags, t.title) end)
+          )
+        end)
+
+      # Filter out any existing items we have
+      existing_ids =
+        item_changesets
+        |> Enum.map(fn item -> Ecto.Changeset.get_field(item, :guid) end)
+        |> (fn item_ids ->
+              Repo.all(
+                from item in Item, where: item.guid in ^item_ids, select: %{guid: item.guid}
+              )
+            end).()
+        |> Enum.map(fn entry -> entry.guid end)
+
+      new_items =
+        item_changesets
+        |> Enum.filter(fn item -> Ecto.Changeset.get_field(item, :guid) not in existing_ids end)
+
+      new_item_guids = new_items |> Enum.map(fn item -> Ecto.Changeset.get_field(item, :guid) end)
+
+      res =
+        new_items
+        |> Enum.with_index()
+        |> Enum.reduce(
+          Ecto.Multi.new(),
+          fn {changeset, idx}, multi ->
+            Ecto.Multi.insert(multi, Integer.to_string(idx), changeset)
+          end
         )
-      end)
+        |> Repo.transaction()
 
-    # Filter out any existing items we have
-    existing_ids =
-      item_changesets
-      |> Enum.map(fn item -> Ecto.Changeset.get_field(item, :guid) end)
-      |> (fn item_ids ->
-            Repo.all(from item in Item, where: item.guid in ^item_ids, select: %{guid: item.guid})
-          end).()
-      |> Enum.map(fn entry -> entry.guid end)
+      # Add search index
+      Item
+      |> where([item], item.guid in ^new_item_guids)
+      |> Repo.all()
+      |> recalculate_search_index_for_items()
 
-    new_items =
-      item_changesets
-      |> Enum.filter(fn item -> Ecto.Changeset.get_field(item, :guid) not in existing_ids end)
-
-    new_item_guids = new_items |> Enum.map(fn item -> Ecto.Changeset.get_field(item, :guid) end)
-
-    res =
-      new_items
-      |> Enum.with_index()
-      |> Enum.reduce(
-        Ecto.Multi.new(),
-        fn {changeset, idx}, multi ->
-          Ecto.Multi.insert(multi, Integer.to_string(idx), changeset)
-        end
-      )
-      |> Repo.transaction()
-
-    # Add search index
-    Item
-    |> where([item], item.guid in ^new_item_guids)
-    |> Repo.all()
-    |> recalculate_search_index_for_items()
-
-    res
+      res
+    end)
   end
 
   def update_item(%Item{} = item, attrs) do
@@ -520,18 +525,26 @@ defmodule Newsbloat.RSS do
     query = from(feed in Feed)
     max_rows = 10
 
-    # TODO: Should use transaction for each individual feed (not for all). Can cause timeouts like this.
+    # Repo.stream has to be called inside transaction
     Repo.transaction(
       fn ->
         query
         |> Repo.stream([{:max_rows, max_rows}])
         |> Stream.chunk_every(max_rows)
         |> Enum.each(fn batch ->
-          batch |> Enum.each(fn feed -> fetch_feed_items(feed) end)
+          batch
+          |> Enum.map(fn feed ->
+            try do
+              fetch_feed_items(feed)
+            rescue
+              _ ->
+                IO.warn("Failed to fetch feed for #{feed.title}")
+            end
+          end)
         end)
       end,
-      # 1 minute
-      timeout: 1000 * 60
+      # 10 minute
+      timeout: 1000 * 60 * 10
     )
   end
 end

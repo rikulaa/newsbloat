@@ -11,8 +11,7 @@ defmodule Newsbloat.RSS.Parser do
     HTTPoison.get(String.trim(url))
   end
 
-  defp parse({:ok, %HTTPoison.Response{} = response}) do
-    IO.inspect(response)
+  defp parse({:ok, %HTTPoison.Response{:status_code => 200} = response}) do
     body = response.body |> Quinn.parse()
     is_rss = body |> Quinn.find(:rss) |> length() > 0
 

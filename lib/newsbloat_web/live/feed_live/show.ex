@@ -95,6 +95,14 @@ defmodule NewsbloatWeb.FeedLive.Show do
       new_page = fetch_page_by_number(assigns.feed, current_page_number + 1)
       new_page = new_page |> Map.put(:entries, existing_items ++ new_page.entries)
 
+      # If we fetch the last entries, we mark them as read as well (as we are not calling this function again)
+      items_to_mark_read =
+        if current_page_number === total_pages - 1,
+          do: existing_items ++ new_page.entries,
+          else: existing_items
+
+      RSS.mark_feed_items_as_read(assigns.feed, items_to_mark_read)
+
       {:noreply, socket |> assign(:page, new_page)}
     else
       {:noreply, socket}

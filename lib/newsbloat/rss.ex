@@ -186,6 +186,20 @@ defmodule Newsbloat.RSS do
     {:ok, feed}
   end
 
+  def mark_feed_items_as_read(%Feed{} = feed, items \\ []) do
+    ids = items |> Enum.map(fn item -> item.id end)
+
+    query =
+      from item in Item,
+        where: item.id in ^ids,
+        update: [set: [is_read: true]]
+
+    query
+    |> Repo.update_all([])
+
+    {:ok, feed}
+  end
+
   def clean_orphaned_tags() do
     orphaned_tags_query =
       Tag

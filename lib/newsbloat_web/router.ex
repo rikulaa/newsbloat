@@ -42,7 +42,7 @@ defmodule NewsbloatWeb.Router do
     live "/search", SearchLive.Index, :index
 
     # NOTE: make sure this is always under auth
-    live_dashboard "/dashboard", metrics: NewsbloatWeb.Telemetry
+    live_dashboard "/dashboard", metrics: NewsbloatWeb.Telemetry, ecto_repos: [Newsbloat.Repo]
   end
 
   # Other scopes may use custom stacks.

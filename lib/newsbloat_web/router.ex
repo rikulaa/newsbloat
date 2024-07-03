@@ -1,10 +1,10 @@
 defmodule NewsbloatWeb.Router do
   use NewsbloatWeb, :router
 
-  alias NewsbloatWeb.Plugs.ReturnToQueryParamToAssigns
   alias NewsbloatWeb.Plugs.UITheme
   import NewsbloatWeb.Plugs.BasicAuth, only: [auth: 2]
   alias NewsbloatWeb.Plugs.PutLanguage
+  import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -40,26 +40,13 @@ defmodule NewsbloatWeb.Router do
     live "/feeds/:id/:item_id", FeedLive.Show, :show
 
     live "/search", SearchLive.Index, :index
+
+    # NOTE: make sure this is always under auth
+    live_dashboard "/dashboard", metrics: NewsbloatWeb.Telemetry
   end
 
   # Other scopes may use custom stacks.
   # scope "/api", NewsbloatWeb do
   #   pipe_through :api
   # end
-
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
-
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: NewsbloatWeb.Telemetry
-    end
-  end
 end
